@@ -1,0 +1,8 @@
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\bin\Debug\OpenGLControl.dll
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\bin\Debug\OpenGLControl.pdb
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.OpenGLControl.resources
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.Properties.Resources.resources
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.csproj.GenerateResource.cache
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.csproj.CoreCompileInputs.cache
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.dll
+C:\Users\lococ\Documents\GitHub\K9ngine\K9ngine\OpenGLControl\obj\Debug\OpenGLControl.pdb
