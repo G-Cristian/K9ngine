@@ -1,5 +1,17 @@
 .vs
 ipch
+Debug
+Release
+K9ngine/OpenGLControl/obj/Debug
+K9ngine/OpenGLControl/obj/Release
+K9ngine/OpenGLControlTester/obj/Debug
+K9ngine/OpenGLControlTester/obj/Release
+K9ngine/OpenGLWrapper/Debug
+K9ngine/OpenGLWrapper/Release
+K9ngine/K9ngineFramework/obj/Debug
+K9ngine/K9ngineFramework/obj/Release
+K9ngine/Tests/Debug
+K9ngine/Tests/Release
 *.ncb
 *.opensdf
 *.sdf
