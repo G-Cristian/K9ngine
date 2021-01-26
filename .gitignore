@@ -1,0 +1,7 @@
+.vs
+ipch
+*.ncb
+*.opensdf
+*.sdf
+*.suo
+*.user
