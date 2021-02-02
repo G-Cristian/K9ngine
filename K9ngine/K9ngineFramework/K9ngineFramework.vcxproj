@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)includes;$(IncludePath)</IncludePath>
+    <IncludePath>includes;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32.lib;glfw3.lib;soil2-debug.lib;OpenGLWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\$(IntDir);$(ProjectDir)lib\Win32\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\$(IntDir);lib\Win32\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,7 +143,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="includes\ColorMaterial.h" />
+    <ClInclude Include="includes\Component.h" />
+    <ClInclude Include="includes\FloatMaterialComponent.h" />
+    <ClInclude Include="includes\GameObject.h" />
+    <ClInclude Include="includes\GameObjectComponentsPool.h" />
+    <ClInclude Include="includes\K9Debug.h" />
+    <ClInclude Include="includes\Material.h" />
+    <ClInclude Include="includes\MaterialComponent.h" />
+    <ClInclude Include="includes\Renderer.h" />
     <ClInclude Include="includes\RenderingComponent.h" />
+    <ClInclude Include="includes\RenderingManager.h" />
+    <ClInclude Include="includes\TextureMaterialComponent.h" />
+    <ClInclude Include="includes\VectorMaterialComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ColorMaterial.cpp" />
+    <ClCompile Include="GameObjectComponentsPool.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderingComponent.cpp" />
+    <ClCompile Include="RenderingManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
