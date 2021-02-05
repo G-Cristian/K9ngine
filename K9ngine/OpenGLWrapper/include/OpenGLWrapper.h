@@ -24,7 +24,7 @@ extern "C" OPENGLWRAPPER_API int getOpenGLError(int* errorsBuffer, int bufferSiz
 /// </summary>
 /// <param name="numberOfErrorsToShow">Number of errors to show per call (0 for no limit)</param>
 /// <returns>std::string containing OpenGL errors (empty string if there were no errors).</returns>
-OPENGLWRAPPER_API std::string WINAPI getOpenGLError(int numberOfErrorsToShow);
+OPENGLWRAPPER_API std::string __stdcall getOpenGLError(int numberOfErrorsToShow);
 
 /// <summary>
 /// Gets shader log corresponding to 'shader'.
@@ -42,14 +42,14 @@ extern "C" OPENGLWRAPPER_API int getShaderLog(GLuint shader, char**logBuffers, i
 /// </summary>
 /// <param name="shader">Shader for which to get the log.</param>
 /// <returns>std::string containing shader log.</returns>
-OPENGLWRAPPER_API std::string WINAPI getShaderLog(GLuint shader);
+OPENGLWRAPPER_API std::string __stdcall getShaderLog(GLuint shader);
 
 /// <summary>
 /// Gets program log corresponding to 'program'.
 /// </summary>
 /// <param name="program">Program to get the log for.</param>
 /// <returns>std::string containing program log.</returns>
-OPENGLWRAPPER_API std::string WINAPI getProgramLog(GLuint program);
+OPENGLWRAPPER_API std::string __stdcall getProgramLog(GLuint program);
 
 /// <summary>
 /// Reads a text file containing a shader source and gets its content.
@@ -57,7 +57,7 @@ OPENGLWRAPPER_API std::string WINAPI getProgramLog(GLuint program);
 /// <param name="shaderSourcePath">Path of the text file.</param>
 /// <param name="returnCode">Out variable for setting a return code (1 if OK).</param>
 /// <returns>std::string with source file content</returns>
-OPENGLWRAPPER_API std::string WINAPI readShaderSource(const char* shaderSourcePath, int& returnCode);
+OPENGLWRAPPER_API std::string __stdcall readShaderSource(const char* shaderSourcePath, int& returnCode);
 
 /// <summary>
 /// Creates and compiles a shader from a text file containing its content.
@@ -67,7 +67,7 @@ OPENGLWRAPPER_API std::string WINAPI readShaderSource(const char* shaderSourcePa
 /// <param name="returnCode">Out variable for setting a return code (1 if OK).</param>
 /// <param name="returnMsg">Out string for setting a return message.</param>
 /// <returns>GLuint for a shader</returns>
-OPENGLWRAPPER_API GLuint WINAPI createAndCompileShader(const char* shaderPath, GLenum shaderType, int& returnCode, std::string& returnMsg);
+OPENGLWRAPPER_API GLuint __stdcall createAndCompileShader(const char* shaderPath, GLenum shaderType, int& returnCode, std::string& returnMsg);
 
 /// <summary>
 /// Creates and compiles a vertex shader from a text file containing its content.
@@ -76,7 +76,7 @@ OPENGLWRAPPER_API GLuint WINAPI createAndCompileShader(const char* shaderPath, G
 /// <param name="returnCode">Out variable for setting a return code (1 if OK).</param>
 /// <param name="returnMsg">Out string for setting a return message.</param>
 /// <returns>GLuint for a vertex shader</returns>
-OPENGLWRAPPER_API GLuint WINAPI createAndCompileVertexShader(const char* shaderPath, int& returnCode, std::string& returnMsg);
+OPENGLWRAPPER_API GLuint __stdcall createAndCompileVertexShader(const char* shaderPath, int& returnCode, std::string& returnMsg);
 
 /// <summary>
 /// Creates and compiles a fragment shader from a text file containing its content.
@@ -85,7 +85,7 @@ OPENGLWRAPPER_API GLuint WINAPI createAndCompileVertexShader(const char* shaderP
 /// <param name="returnCode">Out variable for setting a return code (1 if OK).</param>
 /// <param name="returnMsg">Out string for setting a return message.</param>
 /// <returns>GLuint for a fragment shader</returns>
-OPENGLWRAPPER_API GLuint WINAPI createAndCompileFragmentShader(const char* shaderPath, int& returnCode, std::string& returnMsg);
+OPENGLWRAPPER_API GLuint __stdcall createAndCompileFragmentShader(const char* shaderPath, int& returnCode, std::string& returnMsg);
 
 /// <summary>
 /// Creates a rendering program using a vertex and fragment shader files.
@@ -95,7 +95,7 @@ OPENGLWRAPPER_API GLuint WINAPI createAndCompileFragmentShader(const char* shade
 /// <param name="returnCode">Out variable for setting a return code (1 if OK).</param>
 /// <param name="returnMsg">Out string for setting a return message.</param>
 /// <returns>GLuint for rendering program</returns>
-OPENGLWRAPPER_API GLuint WINAPI createRenderingProgram(const char* vertexShaderFilePath, const char* fragmentShaderFilePath, int& returnCode, std::string& returnMsg);
+OPENGLWRAPPER_API GLuint __stdcall createRenderingProgram(const char* vertexShaderFilePath, const char* fragmentShaderFilePath, int& returnCode, std::string& returnMsg);
 
 /// <summary>
 /// Inits glew (calls glewInit())

@@ -26,7 +26,7 @@ int getOpenGLError(int* errorsBuffer, int bufferSize, bool* moreErrors) {
 	return numberOfErrors;
 }
 
-std::string WINAPI getOpenGLError(int numberOfErrorsToShow) {
+std::string __stdcall getOpenGLError(int numberOfErrorsToShow) {
 	std::stringstream ss;
 	int remainingErrorsToShow = numberOfErrorsToShow;
 	int glError = 0;
@@ -73,7 +73,7 @@ int getShaderLog(GLuint shader, char** logBuffers, int logSize, int numberOfBuff
 	return retVal;
 }
 
-std::string WINAPI getShaderLog(GLuint shader) {
+std::string __stdcall getShaderLog(GLuint shader) {
 	GLint len;
 	GLsizei chWrittn;
 	char* log;
@@ -90,7 +90,7 @@ std::string WINAPI getShaderLog(GLuint shader) {
 	return ss.str();
 }
 
-std::string WINAPI getProgramLog(GLuint program) {
+std::string __stdcall getProgramLog(GLuint program) {
 	GLint len;
 	GLsizei chWrittn;
 	char* log;
@@ -107,7 +107,7 @@ std::string WINAPI getProgramLog(GLuint program) {
 	return ss.str();
 }
 
-std::string WINAPI readShaderSource(const char* shaderSourcePath, int& returnCode) {
+std::string __stdcall readShaderSource(const char* shaderSourcePath, int& returnCode) {
 	returnCode = 1;
 	std::string line;
 	std::stringstream ss;
@@ -129,7 +129,7 @@ std::string WINAPI readShaderSource(const char* shaderSourcePath, int& returnCod
 	return ss.str();
 }
 
-GLuint WINAPI createAndCompileShader(const char* shaderPath, GLenum shaderType, int& returnCode, std::string& returnMsg) {
+GLuint __stdcall createAndCompileShader(const char* shaderPath, GLenum shaderType, int& returnCode, std::string& returnMsg) {
 	returnCode = 1;
 	returnMsg = "";
 
@@ -160,15 +160,15 @@ GLuint WINAPI createAndCompileShader(const char* shaderPath, GLenum shaderType, 
 	return shader;
 }
 
-GLuint WINAPI createAndCompileVertexShader(const char* shaderPath, int& returnCode, std::string& returnMsg) {
+GLuint __stdcall createAndCompileVertexShader(const char* shaderPath, int& returnCode, std::string& returnMsg) {
 	return createAndCompileShader(shaderPath, GL_VERTEX_SHADER, returnCode, returnMsg);
 }
 
-GLuint WINAPI createAndCompileFragmentShader(const char* shaderPath, int& returnCode, std::string& returnMsg) {
+GLuint __stdcall createAndCompileFragmentShader(const char* shaderPath, int& returnCode, std::string& returnMsg) {
 	return createAndCompileShader(shaderPath, GL_FRAGMENT_SHADER, returnCode, returnMsg);
 }
 
-GLuint WINAPI createRenderingProgram(const char* vertexShaderFilePath, const char* fragmentShaderFilePath, int& returnCode, std::string& returnMsg) {
+GLuint __stdcall createRenderingProgram(const char* vertexShaderFilePath, const char* fragmentShaderFilePath, int& returnCode, std::string& returnMsg) {
 	returnCode = 1;
 	returnMsg = "";
 
