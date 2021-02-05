@@ -6,6 +6,7 @@
 #include <ColorMaterial.h>
 #include <Component.h>
 #include <Material.h>
+#include <Model.h>
 
 #include <GL/glew.h>
 #include <map>
@@ -37,14 +38,12 @@ namespace K9 {
 				return *_renderer;
 			}
 
-			void setAttribute(const std::string& attributeName, GLuint attributeValue) {
-				_attributes[attributeName] = attributeValue;
+			void setModel(std::weak_ptr<const K9::Graphics::Model> model) {
+				_model = model;
 			}
 
-			const GLuint getAttribute(const std::string& attributeName) {
-				auto attrIt = _attributes.find(attributeName);
-				K9_ASSERT(attrIt != _attributes.end());
-				return attrIt->second;
+			std::weak_ptr<const K9::Graphics::Model> getModel() const{
+				return _model;
 			}
 
 			void setColorMaterial(std::shared_ptr<K9::Graphics::ColorMaterial> colorMaterial) {
@@ -71,7 +70,7 @@ namespace K9 {
 			std::shared_ptr<const T> getTMaterial() const;
 
 			std::shared_ptr<const K9::Graphics::IRenderer> _renderer;
-			std::map<std::string, GLuint> _attributes;
+			std::weak_ptr<const K9::Graphics::Model> _model;
 			std::map<std::string, std::shared_ptr<K9::Graphics::Material>> _materials;
 		};
 	}
