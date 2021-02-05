@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>includes;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -90,12 +90,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;soil2-debug.lib;OpenGLWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\$(IntDir);lib\Win32\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;glfw3.lib;soil2-debug.lib;opengl32.lib;OpenGLWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\$(IntDir);lib\Win32\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,10 +152,14 @@
     <ClInclude Include="includes\K9Debug.h" />
     <ClInclude Include="includes\Material.h" />
     <ClInclude Include="includes\MaterialComponent.h" />
+    <ClInclude Include="includes\Model.h" />
+    <ClInclude Include="includes\ModelsPool.h" />
     <ClInclude Include="includes\Renderer.h" />
     <ClInclude Include="includes\RenderingComponent.h" />
     <ClInclude Include="includes\RenderingManager.h" />
+    <ClInclude Include="includes\Texture.h" />
     <ClInclude Include="includes\TextureMaterialComponent.h" />
+    <ClInclude Include="includes\TexturesPool.h" />
     <ClInclude Include="includes\VectorMaterialComponent.h" />
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +167,12 @@
     <ClCompile Include="GameObjectComponentsPool.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="ModelsPool.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderingComponent.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TexturesPool.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
