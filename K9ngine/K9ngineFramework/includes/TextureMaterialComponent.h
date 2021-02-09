@@ -2,17 +2,19 @@
 #define _TEXTUREMATERIALCOMPONENT_H_
 
 #include <MaterialComponent.h>
+#include <Texture.h>
 
 #include <GL/glew.h>
+#include <memory>
 #include <string>
 
 namespace K9 {
 	namespace Graphics {
 		class TextureMaterialComponent :public MaterialComponent {
 		public:
-			TextureMaterialComponent(GLuint textureId) :
+			TextureMaterialComponent() :
 				MaterialComponent(),
-				_textureId(textureId)
+				_texture()
 			{
 			}
 			virtual ~TextureMaterialComponent() = default;
@@ -21,11 +23,15 @@ namespace K9 {
 				return "TextureMaterialComponent";
 			}
 
-			GLuint textureId()const {
-				return _textureId;
+			const std::weak_ptr<const Texture>& getTexture()const {
+				return _texture;
+			}
+
+			void setTexture(const std::weak_ptr<const Texture>& texture) {
+				_texture = texture;
 			}
 		private:
-			GLuint _textureId;
+			std::weak_ptr<const Texture> _texture;
 		};
 	}
 }
