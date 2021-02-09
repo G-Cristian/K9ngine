@@ -21,8 +21,14 @@ namespace K9 {
 				_ambientComponent(other._ambientComponent),
 				_diffuseComponent(other._diffuseComponent),
 				_specularComponent(other._specularComponent),
-				_shininessComponent(other._shininessComponent) {
+				_shininessComponent(other._shininessComponent)
+				/*_ambientComponent(std::make_shared<MaterialComponent>(*(other._ambientComponent))),
+				_diffuseComponent(std::make_shared<MaterialComponent>(*(other._diffuseComponent))),
+				_specularComponent(std::make_shared<MaterialComponent>(*(other._specularComponent))),
+				_shininessComponent(std::make_shared<MaterialComponent>(*(other._shininessComponent)))*/ {
 			}
+
+			//TODO: move constructor
 
 			virtual ~ColorMaterial() = default;
 
@@ -33,44 +39,50 @@ namespace K9 {
 					_diffuseComponent = other._diffuseComponent;
 					_specularComponent = other._specularComponent;
 					_shininessComponent = other._shininessComponent;
+					/*_ambientComponent = std::make_shared<MaterialComponent>(*(other._ambientComponent));
+					_diffuseComponent = std::make_shared<MaterialComponent>(*(other._diffuseComponent));
+					_specularComponent = std::make_shared<MaterialComponent>(*(other._specularComponent));
+					_shininessComponent = std::make_shared<MaterialComponent>(*(other._shininessComponent));*/
 				}
 
 				return *this;
 			}
 
+			//TODO: Move assignment
+
 			const std::string getType() const override {
 				return ColorMaterial::materialType;
 			}
 
-			std::shared_ptr<MaterialComponent> ambientComponent() {
+			void setAmbientComponent(std::shared_ptr<MaterialComponent> ambientComponent) {
+				_ambientComponent = ambientComponent;
+			}
+
+			std::shared_ptr<const MaterialComponent> getAmbientComponent() const {
 				return _ambientComponent;
 			}
 
-			std::shared_ptr<const MaterialComponent> ambientComponent() const {
-				return _ambientComponent;
+			void setDiffuseComponent(std::shared_ptr<MaterialComponent> diffuseComponent) {
+				_diffuseComponent = diffuseComponent;
 			}
 
-			std::shared_ptr<MaterialComponent> diffuseComponent() {
+			std::shared_ptr<const MaterialComponent> getDiffuseComponent() const {
 				return _diffuseComponent;
 			}
 
-			std::shared_ptr<const MaterialComponent> diffuseComponent() const {
-				return _diffuseComponent;
+			void setSpecularComponent(std::shared_ptr<MaterialComponent> specularComponent) {
+				_specularComponent = specularComponent;
 			}
 
-			std::shared_ptr<MaterialComponent> specularComponent() {
+			std::shared_ptr<const MaterialComponent> getSpecularComponent() const {
 				return _specularComponent;
 			}
 
-			std::shared_ptr<const MaterialComponent> specularComponent() const {
-				return _specularComponent;
+			void setShininessComponent(std::shared_ptr<MaterialComponent> shininessComponent) {
+				_shininessComponent = shininessComponent;
 			}
 
-			std::shared_ptr<MaterialComponent> shininessComponent() {
-				return _shininessComponent;
-			}
-
-			std::shared_ptr<const MaterialComponent> shininessComponent() const {
+			std::shared_ptr<const MaterialComponent> getSshininessComponent() const {
 				return _shininessComponent;
 			}
 
