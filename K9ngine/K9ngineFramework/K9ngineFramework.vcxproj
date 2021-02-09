@@ -144,8 +144,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="includes\AmbientLight.h" />
+    <ClInclude Include="includes\BaseApp.h" />
+    <ClInclude Include="includes\Camera.h" />
     <ClInclude Include="includes\ColorMaterial.h" />
+    <ClInclude Include="includes\ColorMaterialFactory.h" />
     <ClInclude Include="includes\Component.h" />
+    <ClInclude Include="includes\DirectionalLight.h" />
     <ClInclude Include="includes\FloatMaterialComponent.h" />
     <ClInclude Include="includes\GameObject.h" />
     <ClInclude Include="includes\GameObjectComponentsPool.h" />
@@ -154,25 +159,33 @@
     <ClInclude Include="includes\MaterialComponent.h" />
     <ClInclude Include="includes\Model.h" />
     <ClInclude Include="includes\ModelsPool.h" />
+    <ClInclude Include="includes\PositionalLight.h" />
     <ClInclude Include="includes\Renderer.h" />
+    <ClInclude Include="includes\RenderersContainer.h" />
     <ClInclude Include="includes\RenderingComponent.h" />
     <ClInclude Include="includes\RenderingManager.h" />
+    <ClInclude Include="includes\Spotlight.h" />
     <ClInclude Include="includes\Texture.h" />
     <ClInclude Include="includes\TextureMaterialComponent.h" />
     <ClInclude Include="includes\TexturesPool.h" />
     <ClInclude Include="includes\VectorMaterialComponent.h" />
+    <ClInclude Include="includes\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseApp.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorMaterial.cpp" />
     <ClCompile Include="GameObjectComponentsPool.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelsPool.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderersContainer.cpp" />
     <ClCompile Include="RenderingComponent.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturesPool.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
