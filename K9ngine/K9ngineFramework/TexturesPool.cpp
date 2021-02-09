@@ -34,8 +34,8 @@ namespace K9 {
 					return std::weak_ptr<Texture>();
 				}
 				else {
-					auto texture = std::make_shared<Texture>(textureFile, textureID);
-					return std::weak_ptr<Texture>(texture);
+					auto ret = _texturesPool.insert(std::make_pair(textureFile, std::make_shared<Texture>(textureFile, textureID)));
+					return std::weak_ptr<Texture>(ret.first->second);
 				}
 			}
 		}
