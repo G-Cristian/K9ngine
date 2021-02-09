@@ -18,7 +18,10 @@ namespace K9 {
 	namespace Graphics {
 		class IRenderer {
 		public:
-			IRenderer() = default;
+			IRenderer(const std::string& name) :
+				_name(name){
+			}
+
 			virtual ~IRenderer() = default;
 
 			virtual void draw(const World& world, const std::set<std::shared_ptr<const K9::Components::RenderingComponent>>& renderingComponents) const = 0;
@@ -31,7 +34,6 @@ namespace K9 {
 
 		protected:
 			std::string _name;
-			GLuint _renderingProgram;
 		};
 
 		bool operator<(const IRenderer& left, const IRenderer& right);
