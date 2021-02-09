@@ -95,9 +95,11 @@ namespace K9 {
 				model->setVertexTextureCoordinates(textureCoordinatesIndex);
 				model->usesIndices() = false;
 				model->numberOfElements() = sizeof(vertexPositions) / sizeof(float);
-				_modelsPool[cubeName] = model;
 
-				return std::weak_ptr<Model>(model);
+				auto& modelRef = _modelsPool[cubeName];
+				modelRef = model;
+
+				return std::weak_ptr<Model>(modelRef);
 			}
 		}
 
@@ -139,9 +141,10 @@ namespace K9 {
 				model->usesIndices() = false;
 				model->numberOfElements() = sizeof(vertexPositions) / sizeof(float);
 
-				_modelsPool[pyramidName] = model;
+				auto& modelRef = _modelsPool[pyramidName];
+				modelRef = model;
 
-				return std::weak_ptr<Model>(model);
+				return std::weak_ptr<Model>(modelRef);
 			}
 		}
 
@@ -230,9 +233,11 @@ namespace K9 {
 
 				model->usesIndices() = false;
 				model->numberOfElements() = modelVertexPositions.size();
-				_modelsPool[modelName] = model;
 
-				return std::weak_ptr<Model>(model);
+				auto& modelRef = _modelsPool[modelName];
+				modelRef = model;
+
+				return std::weak_ptr<Model>(modelRef);
 			}
 		}
 
@@ -338,9 +343,11 @@ namespace K9 {
 
 				model->usesIndices() = true;
 				model->numberOfElements() = modelIndices.size();
-				_modelsPool[modelName] = model;
 
-				return std::weak_ptr<Model>(model);
+				auto& modelRef = _modelsPool[modelName];
+				modelRef = model;
+
+				return std::weak_ptr<Model>(modelRef);
 			}
 		}
 
