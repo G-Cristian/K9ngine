@@ -25,7 +25,7 @@ namespace K9 {
 
 			~GameObjectComponentsPool();
 
-			//TODO: delete copy/move construcyor/assignment
+			//TODO: delete copy/move constructor/assignment
 
 			void addRenderingComponentByGameObjectName(const std::string& gameObjectName, std::shared_ptr<RenderingComponent> renderingComponent) {
 				auto it = _gameObjectNamesRenderingComponents.find(gameObjectName);
@@ -46,8 +46,8 @@ namespace K9 {
 				return (it == _gameObjectNamesRenderingComponents.end() ? nullptr : it->second);
 			}
 
-			void setRendererToRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent);
-			void clearRendererToRenderingComponent(std::shared_ptr<RenderingComponent> renderingComponent);
+			void attachRendererAndRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent);
+			void detachRendererAndRenderingComponent(std::shared_ptr<RenderingComponent> renderingComponent);
 		private:
 			GameObjectComponentsPool() = default;
 

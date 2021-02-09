@@ -12,15 +12,15 @@ namespace K9 {
 			// (for example check the count of shared_ptr)
 		}
 
-		void GameObjectComponentsPool::setRendererToRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent) {
+		void GameObjectComponentsPool::attachRendererAndRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent) {
 			K9_ASSERT(renderer != nullptr);
 			using namespace Graphics;
-			clearRendererToRenderingComponent(renderingComponent);
+			detachRendererAndRenderingComponent(renderingComponent);
 			renderingComponent->_renderer = renderer;
 			RenderingManager::instance().addRenderingComponentToRenderer(renderingComponent, renderingComponent->_renderer);
 		}
 
-		void GameObjectComponentsPool::clearRendererToRenderingComponent(std::shared_ptr<RenderingComponent> renderingComponent) {
+		void GameObjectComponentsPool::detachRendererAndRenderingComponent(std::shared_ptr<RenderingComponent> renderingComponent) {
 			using namespace Graphics;
 			if (renderingComponent->_renderer != nullptr) {
 				RenderingManager::instance().removeRenderingComponentFromRenderer(renderingComponent, renderingComponent->_renderer);
