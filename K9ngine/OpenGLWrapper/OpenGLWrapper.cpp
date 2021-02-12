@@ -41,33 +41,21 @@ std::string __stdcall getOpenGLError(int numberOfErrorsToShow) {
 	return ss.str();
 }
 
-int getShaderLog(GLuint shader, char** logBuffers, int logSize, int numberOfBuffers, bool* moreToRead) {
+int getShaderLog(GLuint shader, char* logBuffers, int logSize) {
 	int retVal = 0;
 	GLint len = 0;
 	GLsizei chWrittn = 0;
 
-	*moreToRead = true;
-	char** logBuffersCopy = logBuffers;
-
-	while (*moreToRead && logBuffersCopy != (logBuffers + numberOfBuffers)) {
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-		if (len >= logSize) {
-			// cannot fit log in an element of logBuffers
-			retVal = -1;
-			break;
-		}
-
-		if(len > 0) {
-			// set the log inside the corresponding logBuffersCopy elements
-			// and go to next position
-			glGetShaderInfoLog(shader, len, &chWrittn, *logBuffersCopy);
-			++retVal;
-			++logBuffersCopy;
-		}
-		else {
-			// no more logs
-			*moreToRead = false;
-		}
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
+	if (len >= logSize) {
+		// cannot fit log in an element of logBuffers
+		retVal = -1;
+	}
+	else if (len > 0) {
+		// set the log inside the corresponding logBuffersCopy elements
+		// and go to next position
+		glGetShaderInfoLog(shader, len, &chWrittn, logBuffers);
+		retVal = len;
 	}
 
 	return retVal;
@@ -80,7 +68,7 @@ std::string __stdcall getShaderLog(GLuint shader) {
 
 	std::stringstream ss;
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-	while (len > 0) {
+	if (len > 0) {
 		log = (char*)malloc(len);
 		glGetShaderInfoLog(shader, len, &chWrittn, log);
 		ss << "Shader Info Log: " << log << std::endl;
@@ -97,7 +85,7 @@ std::string __stdcall getProgramLog(GLuint program) {
 	
 	std::stringstream ss;
 	glGetProgramiv(program, GL_INFO_LOG_LENGTH, &len);
-	while (len > 0) {
+	if (len > 0) {
 		log = (char*)malloc(len);
 		glGetProgramInfoLog(program, len, &chWrittn, log);
 		ss << "Program Info Log: " << log << std::endl;
