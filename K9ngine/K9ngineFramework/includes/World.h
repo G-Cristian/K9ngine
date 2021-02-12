@@ -5,6 +5,7 @@
 #include <Camera.h>
 #include <DirectionalLight.h>
 #include <GameObject.h>
+#include <K9Debug.h>
 #include <PositionalLight.h>
 #include <Spotlight.h>
 
@@ -17,19 +18,30 @@ namespace K9 {
 	public:
 		World() = default;
 		World(const World&) = delete;
-		World(World&&)noexcept;
+		World(World&& other)noexcept = delete;
 
 		~World() = default;
 
 		World& operator=(const World&) = delete;
-		World& operator=(World&&)noexcept;
+		World& operator=(World&&) noexcept = delete;
 
 		void addGameObject(const std::shared_ptr<GameObject>& gameObject) {
 			//TODO: Should assert that the gameObject is not in the container already
-			_gameObjects.push_back(gameObject);
+			_gameObjects.insert(std::make_pair(gameObject->name(), gameObject));
 		}
 
-		const std::vector<std::shared_ptr<GameObject>>& getGameObjects()const {
+		std::shared_ptr<GameObject> getGameObject(const std::string& name)const {
+			auto it = _gameObjects.find(name);
+			K9_ASSERT(it != _gameObjects.end());
+			if (it != _gameObjects.end()) {
+				return it->second;
+			}
+			else {
+				return nullptr;
+			}
+		}
+
+		const std::map<std::string, std::shared_ptr<GameObject>>& getGameObjects()const {
 			return _gameObjects;
 		}
 
@@ -78,12 +90,15 @@ namespace K9 {
 			return _cameras;
 		}
 
+		void resetCamerasProjections(float width, float height);
+
 		void setActiveCamera(const std::string& cameraName);
 
-		const std::weak_ptr<Camera>& getActiveCamera()const;
+		std::weak_ptr<const Camera> getActiveCamera()const;
+		std::weak_ptr<Camera> getActiveCamera();
 	private:
 		//TODO: Probably should use Partitioning Trees for one or more of these
-		std::vector<std::shared_ptr<GameObject>> _gameObjects;
+		std::map<std::string, std::shared_ptr<GameObject>> _gameObjects;
 		std::vector<K9::Lighting::AmbientLight> _ambientLights;
 		std::vector<K9::Lighting::DirectionalLight> _directionalLights;
 		std::vector<K9::Lighting::PositionalLight> _positionalLights;
