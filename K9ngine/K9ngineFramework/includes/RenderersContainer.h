@@ -29,7 +29,7 @@ namespace K9 {
 
 			void addRenderer(const std::shared_ptr<const IRenderer>& renderer);
 		private:
-			std::list<const std::shared_ptr<const IRenderer>> _renderers;
+			std::list<std::shared_ptr<const IRenderer>> _renderers;
 		};
 	}
 }
