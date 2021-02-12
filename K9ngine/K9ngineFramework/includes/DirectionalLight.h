@@ -6,6 +6,7 @@
 namespace K9 {
 	namespace Lighting {
 		class DirectionalLight {
+		public:
 			DirectionalLight(const glm::vec4& ambient, const glm::vec4& diffuse, const glm::vec4& specular, const glm::vec3& direction):
 				_ambient(ambient),
 				_diffuse(diffuse),
@@ -46,7 +47,6 @@ namespace K9 {
 			const glm::vec3& direction() const {
 				return _direction;
 			}
-		public:
 		private:
 			glm::vec4 _ambient;
 			glm::vec4 _diffuse;

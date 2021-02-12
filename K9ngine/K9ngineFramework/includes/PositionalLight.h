@@ -6,6 +6,7 @@
 namespace K9 {
 	namespace Lighting {
 		class PositionalLight {
+		public:
 			PositionalLight(const glm::vec4& ambient, const glm::vec4& diffuse, const glm::vec4& specular, const glm::vec3& location):
 				_ambient(ambient),
 				_diffuse(diffuse),
@@ -45,7 +46,6 @@ namespace K9 {
 			const glm::vec3& location() const {
 				return _location;
 			}
-		public:
 		private:
 			glm::vec4 _ambient;
 			glm::vec4 _diffuse;
