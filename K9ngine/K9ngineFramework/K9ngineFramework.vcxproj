@@ -150,6 +150,7 @@
     <ClInclude Include="includes\ColorMaterial.h" />
     <ClInclude Include="includes\ColorMaterialFactory.h" />
     <ClInclude Include="includes\Component.h" />
+    <ClInclude Include="includes\DemoChapter7.h" />
     <ClInclude Include="includes\DirectionalLight.h" />
     <ClInclude Include="includes\FloatMaterialComponent.h" />
     <ClInclude Include="includes\GameObject.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="includes\RenderingManager.h" />
     <ClInclude Include="includes\Spotlight.h" />
     <ClInclude Include="includes\Texture.h" />
+    <ClInclude Include="includes\TextureLightRenderer.h" />
     <ClInclude Include="includes\TextureMaterialComponent.h" />
     <ClInclude Include="includes\TexturesPool.h" />
     <ClInclude Include="includes\VectorMaterialComponent.h" />
@@ -175,15 +177,17 @@
     <ClCompile Include="BaseApp.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorMaterial.cpp" />
+    <ClCompile Include="ColorMaterialFactory.cpp" />
+    <ClCompile Include="DemoChapter7.cpp" />
     <ClCompile Include="GameObjectComponentsPool.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelsPool.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderersContainer.cpp" />
-    <ClCompile Include="RenderingComponent.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureLightRenderer.cpp" />
     <ClCompile Include="TexturesPool.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>

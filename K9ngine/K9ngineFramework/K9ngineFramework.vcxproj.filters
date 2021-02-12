@@ -93,15 +93,18 @@
     <ClInclude Include="includes\RenderersContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="includes\TextureLightRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\DemoChapter7.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -135,6 +138,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BaseApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DemoChapter7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLightRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorMaterialFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
