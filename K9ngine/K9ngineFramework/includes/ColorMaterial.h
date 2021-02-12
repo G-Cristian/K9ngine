@@ -54,7 +54,7 @@ namespace K9 {
 				return ColorMaterial::materialType;
 			}
 
-			void setAmbientComponent(std::shared_ptr<MaterialComponent> ambientComponent) {
+			void setAmbientComponent(std::shared_ptr<const MaterialComponent> ambientComponent) {
 				_ambientComponent = ambientComponent;
 			}
 
@@ -62,7 +62,7 @@ namespace K9 {
 				return _ambientComponent;
 			}
 
-			void setDiffuseComponent(std::shared_ptr<MaterialComponent> diffuseComponent) {
+			void setDiffuseComponent(std::shared_ptr<const MaterialComponent> diffuseComponent) {
 				_diffuseComponent = diffuseComponent;
 			}
 
@@ -70,7 +70,7 @@ namespace K9 {
 				return _diffuseComponent;
 			}
 
-			void setSpecularComponent(std::shared_ptr<MaterialComponent> specularComponent) {
+			void setSpecularComponent(std::shared_ptr<const MaterialComponent> specularComponent) {
 				_specularComponent = specularComponent;
 			}
 
@@ -78,19 +78,19 @@ namespace K9 {
 				return _specularComponent;
 			}
 
-			void setShininessComponent(std::shared_ptr<MaterialComponent> shininessComponent) {
+			void setShininessComponent(std::shared_ptr<const MaterialComponent> shininessComponent) {
 				_shininessComponent = shininessComponent;
 			}
 
-			std::shared_ptr<const MaterialComponent> getSshininessComponent() const {
+			std::shared_ptr<const MaterialComponent> getShininessComponent() const {
 				return _shininessComponent;
 			}
 
 		private:
-			std::shared_ptr<MaterialComponent> _ambientComponent;
-			std::shared_ptr<MaterialComponent> _diffuseComponent;
-			std::shared_ptr<MaterialComponent> _specularComponent;
-			std::shared_ptr<MaterialComponent> _shininessComponent;
+			std::shared_ptr<const MaterialComponent> _ambientComponent;
+			std::shared_ptr<const MaterialComponent> _diffuseComponent;
+			std::shared_ptr<const MaterialComponent> _specularComponent;
+			std::shared_ptr<const MaterialComponent> _shininessComponent;
 		};
 	}
 }
