@@ -67,7 +67,19 @@ namespace K9 {
 			}
 
 			template<class T>
-			std::shared_ptr<const T> getTMaterial() const;
+			std::shared_ptr<const T> getTMaterial() const {
+				std::shared_ptr<const T> retVal = nullptr;
+				auto tmp = getMaterial(T::materialType);
+				if (tmp != nullptr) {
+					retVal = std::dynamic_pointer_cast<const T>(tmp);
+					//if we cast to a T material (ColorMaterial, NormalMaterial, etc)
+					// it better be able to cast to type T
+					// (i.e. the stored material must be of inherited type T even though we store Material pointers)
+					K9_ASSERT(retVal != nullptr);
+				}
+
+				return retVal;
+			}
 
 			std::shared_ptr<const K9::Graphics::IRenderer> _renderer;
 			std::weak_ptr<const K9::Graphics::Model> _model;
