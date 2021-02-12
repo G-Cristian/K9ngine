@@ -25,6 +25,8 @@ namespace K9 {
 
 			~GameObjectComponentsPool();
 
+			void dispose();
+
 			//TODO: delete copy/move constructor/assignment
 
 			void addRenderingComponentByGameObjectName(const std::string& gameObjectName, std::shared_ptr<RenderingComponent> renderingComponent) {

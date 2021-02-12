@@ -17,6 +17,7 @@ namespace K9 {
 		class RenderingManager {
 		public:
 			~RenderingManager();
+			void dispose();
 
 			RenderingManager(const RenderingManager&) = delete;
 			RenderingManager(RenderingManager&&) noexcept = delete;

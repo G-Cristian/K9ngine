@@ -12,21 +12,27 @@ namespace K9 {
 		std::unique_ptr<RenderingManager> RenderingManager::_instance = nullptr;
 
 		RenderingManager::~RenderingManager() {
-			if (_instance != nullptr) {
-				for (auto it = _renderersRenderingComponents.begin(); it != _renderersRenderingComponents.end(); ++it) {
-					//The set of components must be empty by this time, i.e. all components must have been removed and erased.
-					K9_ASSERT(it->second.empty());
-					it->second.clear();
-				}
-				_renderersRenderingComponents.clear();
+			// Must have called dispose before
+			K9_ASSERT(_renderersRenderingComponents.empty());
+			K9_ASSERT(_renderers.empty());
+		}
 
-				for (auto it = _renderers.begin(); it != _renderers.end(); ++it) {
-					it->second = nullptr;
-				}
-				_renderers.clear();
-
-				_instance = nullptr;
+		void RenderingManager::dispose() {
+			for (auto it = _renderersRenderingComponents.begin(); it != _renderersRenderingComponents.end(); ++it) {
+				//The set of components must be empty by this time, i.e. all components must have been removed and erased.
+				K9_ASSERT(it->second.empty());
+				it->second.clear();
 			}
+			_renderersRenderingComponents.clear();
+
+			for (auto it = _renderers.begin(); it != _renderers.end(); ++it) {
+				K9_ASSERT(it->second.unique());
+				it->second = nullptr;
+			}
+
+			_renderers.clear();
+
+			_instance = nullptr;
 		}
 
 		void RenderingManager::draw(const World& world) const {

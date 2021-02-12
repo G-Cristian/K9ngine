@@ -22,6 +22,12 @@ namespace K9 {
 		const std::string ModelsPool::torusName = "Torus";
 
 		ModelsPool::~ModelsPool() {
+			// Must have called dispose
+			K9_ASSERT(_modelsPool.empty());
+			_modelsPool.clear();
+		}
+
+		void ModelsPool::dispose() {
 			for (auto it = _modelsPool.begin(); it != _modelsPool.end(); ++it) {
 				K9_ASSERT(it->second != nullptr);
 				if (it->second != nullptr) {

@@ -9,6 +9,12 @@ namespace K9 {
 	namespace Graphics {
 		std::unique_ptr<TexturesPool> TexturesPool::_instance = nullptr;
 		TexturesPool::~TexturesPool() {
+			// Must have called dispose before
+			K9_ASSERT(_texturesPool.empty());
+			_texturesPool.clear();
+		}
+
+		void TexturesPool::dispose() {
 			for (auto it = _texturesPool.begin(); it != _texturesPool.end(); ++it) {
 				K9_ASSERT(it->second != nullptr);
 				if (it->second != nullptr) {
@@ -18,6 +24,7 @@ namespace K9 {
 				it->second = nullptr;
 			}
 			_texturesPool.clear();
+
 			_instance = nullptr;
 		}
 

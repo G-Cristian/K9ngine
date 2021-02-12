@@ -12,6 +12,7 @@ namespace K9 {
 		class ModelsPool {
 		public:
 			~ModelsPool();
+			void dispose();
 
 			static ModelsPool& instance() {
 				if (_instance == nullptr) {

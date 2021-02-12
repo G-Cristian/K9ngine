@@ -13,6 +13,7 @@ namespace K9 {
 		class TexturesPool {
 		public:
 			~TexturesPool();
+			void dispose();
 
 			static TexturesPool& instance() {
 				if (_instance == nullptr) {
