@@ -12,7 +12,8 @@ namespace K9 {
 			_position(0.0f, 0.0f, 0.0f),
 			_localRotation(0.0f, 0.0f, 0.0f),
 			_offset(0.0f, 0.0f, 0.0f),
-			_rotation(0.0f, 0.0f, 0.0f) {
+			_rotation(0.0f, 0.0f, 0.0f),
+			_scale(1.0f, 1.0f, 1.0f) {
 		}
 
 		GameObject(std::string&& name) noexcept :
@@ -20,7 +21,8 @@ namespace K9 {
 			_position(0.0f, 0.0f, 0.0f),
 			_localRotation(0.0f, 0.0f, 0.0f),
 			_offset(0.0f, 0.0f, 0.0f),
-			_rotation(0.0f, 0.0f, 0.0f) {
+			_rotation(0.0f, 0.0f, 0.0f),
+			_scale(1.0f, 1.0f, 1.0f) {
 		}
 
 		GameObject(const GameObject&) = delete;
@@ -30,12 +32,14 @@ namespace K9 {
 			_position(std::move(other._position)),
 			_localRotation(std::move(other._localRotation)),
 			_offset(std::move(other._offset)),
-			_rotation(std::move(other._rotation)) {
+			_rotation(std::move(other._rotation)),
+			_scale(std::move(other._scale)) {
 			other._name = "";
 			other._position = glm::vec3();
 			other._localRotation = glm::vec3();
 			other._offset = glm::vec3();
 			other._rotation = glm::vec3();
+			other._scale = glm::vec3();
 		}
 
 		~GameObject() = default;
@@ -49,13 +53,14 @@ namespace K9 {
 				_localRotation = std::move(other._localRotation);
 				_offset = std::move(other._offset);
 				_rotation = std::move(other._rotation);
+				_scale = std::move(other._scale);
 
 				other._name = "";
 				other._position = glm::vec3();
 				other._localRotation = glm::vec3();
 				other._offset = glm::vec3();
 				other._rotation = glm::vec3();
-
+				other._scale = glm::vec3();
 			}
 
 			return *this;
@@ -96,12 +101,21 @@ namespace K9 {
 		glm::vec3& rotation() {
 			return _rotation;
 		}
+
+		const glm::vec3& scale() const {
+			return _scale;
+		}
+
+		glm::vec3& scale() {
+			return _scale;
+		}
 	private:
 		std::string _name;
 		glm::vec3 _position;
 		glm::vec3 _localRotation;
 		glm::vec3 _offset;
 		glm::vec3 _rotation;
+		glm::vec3 _scale;
 	};
 }
 
