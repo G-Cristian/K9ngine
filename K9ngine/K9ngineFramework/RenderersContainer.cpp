@@ -16,7 +16,7 @@ namespace K9 {
 			}
 		}
 
-		void RenderersContainer::addRenderer(const std::shared_ptr<const IRenderer>& renderer) {
+		void RenderersContainer::addRenderer(const std::shared_ptr<IRenderer>& renderer) {
 			_renderers.push_back(renderer);
 		}
 	}

@@ -27,9 +27,9 @@ namespace K9 {
 
 			void draw(const World& world, const std::set<std::shared_ptr<const K9::Components::RenderingComponent>>& renderingComponents) const override;
 
-			void addRenderer(const std::shared_ptr<const IRenderer>& renderer);
+			void addRenderer(const std::shared_ptr<IRenderer>& renderer);
 		private:
-			std::list<std::shared_ptr<const IRenderer>> _renderers;
+			std::list<std::shared_ptr<IRenderer>> _renderers;
 		};
 	}
 }
