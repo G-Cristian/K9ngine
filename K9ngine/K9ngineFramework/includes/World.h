@@ -45,39 +45,39 @@ namespace K9 {
 			return _gameObjects;
 		}
 
-		void addAmbientLight(const K9::Lighting::AmbientLight& ambientLight) {
+		void addAmbientLight(const std::shared_ptr <K9::Lighting::AmbientLight>& ambientLight) {
 			//TODO: Should assert that the light is not in the container already
 			_ambientLights.push_back(ambientLight);
 		}
 
-		const std::vector<K9::Lighting::AmbientLight>& getAmbientLights()const {
+		const std::vector<std::shared_ptr <K9::Lighting::AmbientLight>>& getAmbientLights()const {
 			return _ambientLights;
 		}
 
-		void addDirectionalLight(const K9::Lighting::DirectionalLight& directionalLight) {
+		void addDirectionalLight(const std::shared_ptr < K9::Lighting::DirectionalLight>& directionalLight) {
 			//TODO: Should assert that the light is not in the container already
 			_directionalLights.push_back(directionalLight);
 		}
 
-		const std::vector<K9::Lighting::DirectionalLight>& getDirectionalLights()const {
+		const std::vector<std::shared_ptr <K9::Lighting::DirectionalLight>>& getDirectionalLights()const {
 			return _directionalLights;
 		}
 
-		void addPositionalLight(const K9::Lighting::PositionalLight& positionalLight) {
+		void addPositionalLight(const std::shared_ptr <K9::Lighting::PositionalLight>& positionalLight) {
 			//TODO: Should assert that the light is not in the container already
 			_positionalLights.push_back(positionalLight);
 		}
 
-		const std::vector<K9::Lighting::PositionalLight>& getPositionalLights()const {
+		const std::vector<std::shared_ptr<K9::Lighting::PositionalLight>>& getPositionalLights()const {
 			return _positionalLights;
 		}
 
-		void addSpotlight(const K9::Lighting::Spotlight& spotlight) {
+		void addSpotlight(const std::shared_ptr<K9::Lighting::Spotlight>& spotlight) {
 			//TODO: Should assert that the light is not in the container already
 			_spotlights.push_back(spotlight);
 		}
 
-		const std::vector<K9::Lighting::Spotlight>& getSpotlights()const {
+		const std::vector<std::shared_ptr<K9::Lighting::Spotlight>>& getSpotlights()const {
 			return _spotlights;
 		}
 
@@ -99,10 +99,10 @@ namespace K9 {
 	private:
 		//TODO: Probably should use Partitioning Trees for one or more of these
 		std::map<std::string, std::shared_ptr<GameObject>> _gameObjects;
-		std::vector<K9::Lighting::AmbientLight> _ambientLights;
-		std::vector<K9::Lighting::DirectionalLight> _directionalLights;
-		std::vector<K9::Lighting::PositionalLight> _positionalLights;
-		std::vector<K9::Lighting::Spotlight> _spotlights;
+		std::vector<std::shared_ptr<K9::Lighting::AmbientLight>> _ambientLights;
+		std::vector<std::shared_ptr<K9::Lighting::DirectionalLight>> _directionalLights;
+		std::vector<std::shared_ptr<K9::Lighting::PositionalLight>> _positionalLights;
+		std::vector< std::shared_ptr<K9::Lighting::Spotlight>> _spotlights;
 		std::map<std::string, std::shared_ptr<Camera>> _cameras;
 		std::weak_ptr<Camera> _activeCamera;
 	};

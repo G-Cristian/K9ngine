@@ -151,17 +151,17 @@ namespace K9 {
 			const auto& ambientLights = world.getAmbientLights();
 			if (ambientLights.size() > 0) {
 				const auto& ambientLight = ambientLights[0];
-				programUniform4fv(_renderingProgram, globalAmbientLoc, glm::value_ptr(ambientLight.ambient()));
+				programUniform4fv(_renderingProgram, globalAmbientLoc, glm::value_ptr(ambientLight->ambient()));
 			}
 
 			const auto& positionalLights = world.getPositionalLights();
 			if (positionalLights.size() > 0) {
 				const auto& positionalLight = positionalLights[0];
-				programUniform4fv(_renderingProgram, light0_ambientLoc, glm::value_ptr(positionalLight.ambient()));
-				programUniform4fv(_renderingProgram, light0_diffuseLoc, glm::value_ptr(positionalLight.diffuse()));
-				programUniform4fv(_renderingProgram, light0_specularLoc, glm::value_ptr(positionalLight.specular()));
+				programUniform4fv(_renderingProgram, light0_ambientLoc, glm::value_ptr(positionalLight->ambient()));
+				programUniform4fv(_renderingProgram, light0_diffuseLoc, glm::value_ptr(positionalLight->diffuse()));
+				programUniform4fv(_renderingProgram, light0_specularLoc, glm::value_ptr(positionalLight->specular()));
 
-				glm::vec3 lightPosV = glm::vec3(viewMatrix * glm::vec4(positionalLight.location(), 1.0f));
+				glm::vec3 lightPosV = glm::vec3(viewMatrix * glm::vec4(positionalLight->location(), 1.0f));
 
 				programUniform3fv(_renderingProgram, light0_positionLoc, glm::value_ptr(lightPosV));
 			}

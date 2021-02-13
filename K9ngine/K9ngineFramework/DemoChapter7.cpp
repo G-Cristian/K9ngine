@@ -121,14 +121,14 @@ namespace K9 {
 		}
 
 		void DemoChapter7::initLights() {
-			Lighting::AmbientLight ambientLight(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
+			auto ambientLight = std::make_shared <Lighting::AmbientLight>(glm::vec4(0.7f, 0.7f, 0.7f, 1.0f));
 			_world->addAmbientLight(ambientLight);
 
 			glm::vec4 posAmbient = { 0.0f, 0.0f, 0.0f, 1.0f };
 			glm::vec4 posDiffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 			glm::vec4 posSpecular = { 1.0f, 1.0f, 1.0f, 1.0f };
 			glm::vec3 posPosition = { 5.0f, 2.0f, 2.0f };
-			Lighting::PositionalLight positionalLight(posAmbient, posDiffuse, posSpecular, posPosition);
+			auto positionalLight = std::make_shared<Lighting::PositionalLight>(posAmbient, posDiffuse, posSpecular, posPosition);
 			_world->addPositionalLight(positionalLight);
 		}
 
