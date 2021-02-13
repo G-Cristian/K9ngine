@@ -127,6 +127,27 @@ namespace K9 {
 					halfBase, -halfHeight, halfBase, -halfBase, -halfHeight, -halfBase, halfBase, -halfHeight, -halfBase
 				};
 
+				glm::vec3 frontBottomLeft(-halfBase, -halfHeight, halfBase);
+				glm::vec3 frontBottomRight(halfBase, -halfHeight, halfBase);
+				glm::vec3 top(0.0f, halfHeight, 0.0f);
+				glm::vec3 rightBottomBack(halfBase, -halfHeight, -halfBase);
+				glm::vec3 leftBottomBack(-halfBase, -halfHeight, -halfBase);
+				
+				glm::vec3 frontNorm = glm::normalize(glm::cross(frontBottomRight - frontBottomLeft, top - frontBottomLeft));
+				glm::vec3 rightNorm = glm::normalize(glm::cross(rightBottomBack - frontBottomRight, top - frontBottomRight));
+				glm::vec3 backNorm = glm::normalize(glm::cross(leftBottomBack - rightBottomBack, top - rightBottomBack));
+				glm::vec3 leftNorm = glm::normalize(glm::cross(frontBottomLeft - leftBottomBack, top - leftBottomBack));
+				glm::vec3 bottomNorm = glm::normalize(glm::cross(leftBottomBack - frontBottomLeft, frontBottomRight - frontBottomLeft));
+
+				float vertexNormals[] = {
+					frontNorm.x, frontNorm.y, frontNorm.z, frontNorm.x, frontNorm.y, frontNorm.z, frontNorm.x, frontNorm.y, frontNorm.z,
+					rightNorm.x, rightNorm.y, rightNorm.z, rightNorm.x, rightNorm.y, rightNorm.z, rightNorm.x, rightNorm.y, rightNorm.z,
+					backNorm.x, backNorm.y, backNorm.z, backNorm.x, backNorm.y, backNorm.z, backNorm.x, backNorm.y, backNorm.z,
+					leftNorm.x, leftNorm.y, leftNorm.z, leftNorm.x, leftNorm.y, leftNorm.z, leftNorm.x, leftNorm.y, leftNorm.z,
+					bottomNorm.x, bottomNorm.y, bottomNorm.z, bottomNorm.x, bottomNorm.y, bottomNorm.z, bottomNorm.x, bottomNorm.y, bottomNorm.z,
+					bottomNorm.x, bottomNorm.y, bottomNorm.z, bottomNorm.x, bottomNorm.y, bottomNorm.z, bottomNorm.x, bottomNorm.y, bottomNorm.z
+				};
+
 				float textureCoordinates[] = {
 					0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
 					0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 1.0f,
@@ -137,12 +158,12 @@ namespace K9 {
 				};
 
 				GLuint vertexPositionsIndex = createArrayBuffer(vertexPositions, 54); //size == 6*9
-				//GLuint vertexNormalsIndex = createArrayBuffer(vertexNormals, 54); //size == 6*9
+				GLuint vertexNormalsIndex = createArrayBuffer(vertexNormals, 54); //size == 6*9
 				GLuint textureCoordinatesIndex = createArrayBuffer(textureCoordinates, 36); //size == 6*6
 
 				auto model = std::make_shared<Model>();
 				model->setVertexPositions(vertexPositionsIndex);
-				//model->setVertexNormals(vertexNormalsIndex);
+				model->setVertexNormals(vertexNormalsIndex);
 				model->setVertexTextureCoordinates(textureCoordinatesIndex);
 				model->usesIndices() = false;
 				model->numberOfElements() = sizeof(vertexPositions) / sizeof(float);
