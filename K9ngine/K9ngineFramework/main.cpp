@@ -1,10 +1,11 @@
 #include <BaseApp.h>
 #include <DemoChapter7.h>
+#include <DemoChapter8.h>
 
 using namespace K9;
 
 int main() {
-	App::BaseApp* app = new App::DemoChapter7("DemoChapter7", 800, 600);
+	App::BaseApp* app = new App::DemoChapter8("DemoChapter8", 800, 800);
 
 	app->start();
 
