@@ -26,7 +26,9 @@ namespace K9 {
 			_window(nullptr),
 			_inited(false),
 			_shouldTerminate(false),
-			_world(new World()) {
+			_world(new World()),
+			_currentFrameTime(0.0),
+			_lastFrameTime(0.0) {
 			
 			K9_ASSERT(_pointerToThisForUseInWindowResizeCallback == nullptr);
 			if (_pointerToThisForUseInWindowResizeCallback == nullptr) {
@@ -85,9 +87,14 @@ namespace K9 {
 			initWindow(_width, _height);
 			_shouldTerminate = false;
 			init();
+			_lastFrameTime = glfwGetTime();
+			double dt = 0.0;
 			while (!glfwWindowShouldClose(_window) && !_shouldTerminate) {
-				update(glfwGetTime());
-				draw(glfwGetTime());
+				_currentFrameTime = glfwGetTime();
+				dt = _currentFrameTime - _lastFrameTime;
+				_lastFrameTime = _currentFrameTime;
+				update(dt);
+				draw(dt);
 				glfwSwapBuffers(_window);
 				glfwPollEvents();
 			}

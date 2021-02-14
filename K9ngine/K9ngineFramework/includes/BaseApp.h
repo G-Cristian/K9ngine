@@ -46,6 +46,9 @@ namespace K9 {
 
 			bool _shouldTerminate;
 			std::unique_ptr<World> _world;
+		private:
+			double _currentFrameTime;
+			double _lastFrameTime;
 		};
 	}
 }
