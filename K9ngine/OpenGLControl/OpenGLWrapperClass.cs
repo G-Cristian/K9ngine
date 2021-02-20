@@ -35,8 +35,11 @@ namespace OpenGLControl
 		[DllImport(kernel32_dll, SetLastError = true)]
 		public static extern IntPtr LoadLibrary(string fileName);
 
-		[DllImport(kernel32_dll, CharSet = CharSet.Auto, SetLastError = true)]
+		[DllImport(kernel32_dll, SetLastError = true)]
 		public static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+		[DllImport("Kernel32", SetLastError = true)]
+		public extern static Boolean CloseHandle(IntPtr handle);
 
 		#endregion
 
@@ -47,7 +50,7 @@ namespace OpenGLControl
 		[DllImport(user32_dll, SetLastError = true)]
 		public static extern IntPtr GetDC(IntPtr hWnd);
 
-		[DllImport(user32_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
+		[DllImport(user32_dll, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
 		public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
 		#endregion
@@ -73,12 +76,15 @@ namespace OpenGLControl
 		#endregion
 
 		#region OpenGLWrapper.dll
-
-		public const string OpenGLWrapper_dll = "C:\\Users\\lococ\\Documents\\GitHub\\K9ngine\\K9ngine\\Debug\\OpenGLWrapper.dll";
-		/*
+#if DEBUG
+		public const string OpenGLWrapper_dll = "..\\..\\..\\..\\Debug\\OpenGLWrapper.dll";
+#else
+		public const string OpenGLWrapper_dll = "..\\..\\..\\..\\Release\\OpenGLWrapper.dll";
+#endif
+		
 		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int getOpenGLError(IntPtr errorsBuffer, int bufferSize, IntPtr moreErrors);
-		*/
+		public static extern int getOpenGLError(int[] errorsBuffer, int bufferSize, bool[] moreErrors);
+		
 
 		/// <summary>
 		/// Gets OpenGL errors. Empty string if there were no errors.
@@ -86,8 +92,8 @@ namespace OpenGLControl
 		/// <param name="numberOfErrorsToShow">Number of errors to show per call (0 for no limit)</param>
 		/// <returns>std::string containing OpenGL errors (empty string if there were no errors).</returns>
 		/// 
-		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
-		public static extern string getOpenGLError(int numberOfErrorsToShow);
+		//[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+		//public static extern string getOpenGLError(int numberOfErrorsToShow);
 		/*
 		public static string GetOpenGLError(int numberOfErrorsToShow)
 		{
@@ -406,6 +412,10 @@ namespace OpenGLControl
 
 		public const string opengl_dll = "opengl32.dll";
 
+		//[DllImport(opengl_dll, EntryPoint = "wglGetProcAddress", SetLastError = true)]
+		[DllImport(opengl_dll, SetLastError = true)]
+		private static extern IntPtr wglGetProcAddress(string lpszProc);
+
 		[DllImport(opengl_dll, SetLastError = true)]
 		public static extern void glClearColor(float red, float green, float blue, float alpha);
 
@@ -417,6 +427,31 @@ namespace OpenGLControl
 
 		[DllImport(opengl_dll, SetLastError = true)]
 		public static extern int wglDeleteContext(IntPtr hrc);
+
+		private delegate IntPtr Delegate_glGetString(int name);
+
+		public static string glGetString(int name)
+		{
+			string returnVal = string.Empty;
+			IntPtr val = IntPtr.Zero;
+
+			//IntPtr addr = wglGetProcAddress("glGetString");
+			IntPtr addr = GetProcAddress(GLLibraryHandle, "glGetString");
+			if (addr != IntPtr.Zero)
+			{
+				var delegateFunction = (Delegate_glGetString)Marshal.GetDelegateForFunctionPointer(addr, typeof(Delegate_glGetString));
+				val = delegateFunction(name);
+			}
+
+			if(val != IntPtr.Zero)
+			{
+				returnVal = Marshal.PtrToStringAnsi(val);
+			}
+
+			return returnVal;
+		}
+
+		public const int GL_VERSION = 0x1F02;
 
 		#endregion
 
@@ -520,6 +555,35 @@ namespace OpenGLControl
 			return pfd;
 		}
 
-		#endregion
+#endregion
+
+#region OpenGL Extensions
+
+		// values taken from https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_create_context.txt
+		public const int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
+		public const int WGL_CONTEXT_MINOR_VERSION_ARB = 0x2092;
+		public const int WGL_CONTEXT_LAYER_PLANE_ARB = 0x2093;
+		public const int WGL_CONTEXT_FLAGS_ARB = 0x2094;
+		public const int WGL_CONTEXT_PROFILE_MASK_ARB = 0x9126;
+
+		public const int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
+
+		private delegate IntPtr Delegate_wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList);
+
+		public static IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList)
+		{
+			IntPtr hRC = IntPtr.Zero;
+
+			IntPtr addr = wglGetProcAddress("wglCreateContextAttribsARB");
+			if (addr != IntPtr.Zero)
+			{
+				var delegateFunction = (Delegate_wglCreateContextAttribsARB)Marshal.GetDelegateForFunctionPointer(addr, typeof(Delegate_wglCreateContextAttribsARB));
+				hRC = delegateFunction(hDC, hShareContext, attribList);
+			}
+
+			return hRC;
+		}
+
+#endregion
 	}
 }
