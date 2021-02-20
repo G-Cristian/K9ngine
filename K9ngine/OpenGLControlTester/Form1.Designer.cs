@@ -34,11 +34,17 @@ namespace OpenGLControlTester
 			// 
 			// openGLControl1
 			// 
+			this.openGLControl1.AllowDebug = true;
 			this.openGLControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.openGLControl1.Location = new System.Drawing.Point(0, 0);
+			this.openGLControl1.MajorVersion = 0;
+			this.openGLControl1.MinorVersion = 0;
 			this.openGLControl1.Name = "openGLControl1";
 			this.openGLControl1.Size = new System.Drawing.Size(800, 450);
 			this.openGLControl1.TabIndex = 0;
+			this.openGLControl1.Render += new OpenGLControl.OpenGLControl.RenderDelegate(this.openGLControl1_Render);
+			this.openGLControl1.Load += new System.EventHandler(this.openGLControl1_Load);
+			this.openGLControl1.DoubleClick += new System.EventHandler(this.openGLControl1_DoubleClick);
 			// 
 			// Form1
 			// 
@@ -48,6 +54,7 @@ namespace OpenGLControlTester
 			this.Controls.Add(this.openGLControl1);
 			this.Name = "Form1";
 			this.Text = "Form1";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
 			this.ResumeLayout(false);
 
 		}
