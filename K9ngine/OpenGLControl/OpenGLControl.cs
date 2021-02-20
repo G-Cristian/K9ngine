@@ -13,43 +13,88 @@ namespace OpenGLControl
 {
     public partial class OpenGLControl: UserControl
     {
-        public OpenGLControl()
+		#region Members
+
+		private OpenGL _openGLInstance= null;
+		private int _majorVersion = 0;
+		private int _minorVersion = 0;
+
+		private bool _allowDebug = true;
+
+		#endregion
+
+		#region Delegates/Events
+		public delegate void RenderDelegate(OpenGL openGLInstance);
+
+		public event RenderDelegate PreRender;
+		public event RenderDelegate Render;
+		public event RenderDelegate PostRender;
+
+		#endregion
+
+		#region Properties
+
+		public int MajorVersion {
+			get
+			{
+				return _majorVersion;
+			}
+			set
+			{
+				_majorVersion = (value < 0 ? 0 : value);
+			}
+		}
+		public int MinorVersion
+		{
+			get
+			{
+				return _minorVersion;
+			}
+			set
+			{
+				_minorVersion = (value < 0 ? 0 : value);
+			}
+		}
+		public bool AllowDebug
+		{
+			get
+			{
+				return _allowDebug;
+			}
+			set
+			{
+				_allowDebug = value;
+			}
+		}
+
+		#endregion
+
+			#region Control Methods
+
+		public OpenGLControl()
         {
             InitializeComponent();
         }
-		IntPtr hDC;
-		IntPtr hRC;
+
 		bool red = true;
 		private void OpenGLControl_Load(object sender, EventArgs e)
 		{
 			if (this.DesignMode) return;
 
-			int error = 0;
-
 			//OpenGLWrapperClass.LoadLibrary(OpenGLWrapperClass.opengl_dll);
 			//OpenGLWrapperClass.LoadLibrary(OpenGLWrapperClass.glew32_dll);
-			IntPtr hWnd = this.Handle;
-			error = Marshal.GetLastWin32Error();
+			_openGLInstance = new OpenGL(this.Handle, _allowDebug);
+			OpenGL.Settings settings = new OpenGL.Settings();
+			//TODO: Get versions from properties
+			settings.majorVersion = MajorVersion;
+			settings.minorVersion = MinorVersion;
 
-			hDC = OpenGLWrapperClass.GetDC(hWnd);
-			error = Marshal.GetLastWin32Error();
+			_openGLInstance.Init(settings);
 
-			OpenGLWrapperClass.PIXELFORMATDESCRIPTION pfd = OpenGLWrapperClass.GetDefaultPixelFormatDescriptor();
-			int format = OpenGLWrapperClass.ChoosePixelFormat(hDC, pfd);
-			error = Marshal.GetLastWin32Error();
-			OpenGLWrapperClass.SetPixelFormat(hDC, format, pfd);
-			error = Marshal.GetLastWin32Error();
-
-			hRC = OpenGLWrapperClass.wglCreateContext(hDC);
-			error = Marshal.GetLastWin32Error();
-			
-			OpenGLWrapperClass.wglMakeCurrent(hDC, hRC);
-			error = Marshal.GetLastWin32Error();
 
 			//OpenGLWrapperClass.initGlew();
 			//error = Marshal.GetLastWin32Error();
-			OpenGLWrapperClass.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-			error = Marshal.GetLastWin32Error();
+
 			//OpenGLWrapperClass.clearColorBuffer();
 			//error = Marshal.GetLastWin32Error();
 
@@ -62,10 +107,6 @@ namespace OpenGLControl
 
 			//MessageBox.Show(error);
 
-
-
-
-
 		}
 
 		private void OpenGLControl_Paint(object sender, PaintEventArgs e)
@@ -73,32 +114,62 @@ namespace OpenGLControl
 			if (DesignMode) {
 				return;
 			}
-			int error;
+			
+			//IntPtr hdc = e.Graphics.GetHdc();
+			//error = Marshal.GetLastWin32Error();
 
-			OpenGLWrapperClass.wglMakeCurrent(hDC, hRC);
-			error = Marshal.GetLastWin32Error();
+			//OpenGLWrapperClass.clearColorBuffer();
+			//error = Marshal.GetLastWin32Error();
 
-			if (red)
-			{
-				OpenGLWrapperClass.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-				red = false;
-			}
-			else
-			{
-				OpenGLWrapperClass.glClearColor(0.0f, 1.0f, 0.0f, 0.0f);
-				red = true;
-			}
-			IntPtr hdc = e.Graphics.GetHdc();
-			error = Marshal.GetLastWin32Error();
+			//OpenGLWrapperClass.SwapBuffers(hdc);
+			//error = Marshal.GetLastWin32Error();
 
-			OpenGLWrapperClass.clearColorBuffer();
-			error = Marshal.GetLastWin32Error();
-
-			OpenGLWrapperClass.SwapBuffers(hdc);
-			error = Marshal.GetLastWin32Error();
-
-			e.Graphics.ReleaseHdc(hdc);
-			error = Marshal.GetLastWin32Error();
+			//e.Graphics.ReleaseHdc(hdc);
+			//error = Marshal.GetLastWin32Error();
 		}
+
+		#endregion
+
+		#region Custom Methods
+
+		public void DrawScene()
+		{
+			if(PreRender != null)
+			{
+				PreRender(_openGLInstance);
+			}
+
+			if(Render != null)
+			{
+				Render(_openGLInstance);
+			}
+
+			if (PostRender != null)
+			{
+				PostRender(_openGLInstance);
+			}
+
+			try
+			{
+				//TODO: This is inside a try because for some reason SwapBuffers sets last win32 error to 2
+				// so I throw an exception
+				_openGLInstance.SwapBuffers();
+			}
+			catch(Exception e)
+			{
+				if (_allowDebug)
+				{
+					Console.WriteLine(e.Message);
+				}
+			}
+		}
+
+		
+
+		#endregion
+
+		#region Helper Methods
+		
+		#endregion
 	}
 }
