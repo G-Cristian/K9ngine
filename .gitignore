@@ -2,10 +2,16 @@
 ipch
 Debug
 Release
+K9ngine/OpenGLControl/bin/Debug
+K9ngine/OpenGLControl/bin/Release
 K9ngine/OpenGLControl/obj/Debug
 K9ngine/OpenGLControl/obj/Release
+K9ngine/OpenGLControl/obj/x86/Debug
+K9ngine/OpenGLControl/obj/x86/Release
 K9ngine/OpenGLControlTester/obj/Debug
 K9ngine/OpenGLControlTester/obj/Release
+K9ngine/OpenGLControlTester/obj/x86/Debug
+K9ngine/OpenGLControlTester/obj/x86/Release
 K9ngine/OpenGLWrapper/Debug
 K9ngine/OpenGLWrapper/Release
 K9ngine/K9ngineFramework/obj/Debug
