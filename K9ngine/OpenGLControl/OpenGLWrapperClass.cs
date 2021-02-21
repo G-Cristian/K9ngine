@@ -21,10 +21,10 @@ namespace OpenGLControl
 		static OpenGLWrapperClass()
 		{
 			GLLibraryHandle = LoadLibrary(opengl_dll);
-			//GlewLibraryHandle = LoadLibrary(glew32_dll);
+			GlewLibraryHandle = LoadLibrary(glew32_dll);
 			//int error = Marshal.GetLastWin32Error();
 
-			//OpenGLWrapperLibraryHandle = LoadLibrary(OpenGLWrapper_dll);
+			OpenGLWrapperLibraryHandle = LoadLibrary(OpenGLWrapper_dll);
 			//error = Marshal.GetLastWin32Error();
 		}
 
@@ -71,20 +71,23 @@ namespace OpenGLControl
 
 		#region glew32.dll
 
-		public const string glew32_dll = "C:\\Users\\lococ\\Documents\\GitHub\\K9ngine\\K9ngine\\Debug\\glew32.dll";
-
+#if DEBUG
+		public const string glew32_dll = @"..\..\..\..\Debug\glew32.dll";
+#else
+		public const string OpenGLWrapper_dll = @"..\..\..\..\Release\glew32.dll";
+#endif
 		#endregion
 
 		#region OpenGLWrapper.dll
 #if DEBUG
-		public const string OpenGLWrapper_dll = "..\\..\\..\\..\\Debug\\OpenGLWrapper.dll";
+		public const string OpenGLWrapper_dll = @"..\..\..\..\Debug\OpenGLWrapper.dll";
 #else
-		public const string OpenGLWrapper_dll = "..\\..\\..\\..\\Release\\OpenGLWrapper.dll";
+		public const string OpenGLWrapper_dll = @"..\..\..\..\Release\OpenGLWrapper.dll";
 #endif
-		
+
 		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int getOpenGLError(int[] errorsBuffer, int bufferSize, bool[] moreErrors);
-		
+
 
 		/// <summary>
 		/// Gets OpenGL errors. Empty string if there were no errors.
@@ -193,8 +196,21 @@ namespace OpenGLControl
 		/// Returns GLEW_OK if success
 		/// </summary>
 		/// <returns>Code returned by glewInit()</returns>
-		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
-		public static extern int initGlew();
+		//[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
+		//public static extern int initGlew();
+
+		private delegate int Delegate_initGlew();
+		public static int initGlew()
+		{
+			int retCode = -1;
+			var delegateFunction = GetProcDelegate<Delegate_initGlew>(OpenGLWrapperLibraryHandle, "initGlew");
+			if (delegateFunction != null)
+			{
+				retCode = delegateFunction();
+			}
+
+			return retCode;
+		}
 
 		/// <summary>
 		/// Clears color buffer (GL_COLOR_BUFFER_BIT)
@@ -280,7 +296,7 @@ namespace OpenGLControl
 		/// Creates an array buffer (GL_ARRAY_BUFFER)
 		/// </summary>
 		/// <param name="attributes">Array of attributes.</param>
-		/// <param name="numberOfAttributes">Number of attributes.</param>
+		/// <param name="numberOfAttributes">Number of elements in attributes, i.e. attributes length.</param>
 		/// <returns>The vertex buffer object (VBO)</returns>
 		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern uint createArrayBuffer(float[] attributes, int numberOfAttributes);
@@ -289,7 +305,7 @@ namespace OpenGLControl
 		/// Creates an element array buffer (GL_ELEMENT_ARRAY_BUFFER)
 		/// </summary>
 		/// <param name="attributes">Array of attributes.</param>
-		/// <param name="numberOfAttributes">Number of attributes.</param>
+		/// <param name="numberOfAttributes">Number of elements in attributes, i.e. attributes length.</param>
 		/// <returns>The vertex buffer object (VBO)</returns>
 		[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
 		public static extern uint createElementArrayBuffer(int[] attributes, int numberOfAttributes);
@@ -443,7 +459,7 @@ namespace OpenGLControl
 				val = delegateFunction(name);
 			}
 
-			if(val != IntPtr.Zero)
+			if (val != IntPtr.Zero)
 			{
 				returnVal = Marshal.PtrToStringAnsi(val);
 			}
@@ -555,9 +571,11 @@ namespace OpenGLControl
 			return pfd;
 		}
 
-#endregion
+		#endregion
 
-#region OpenGL Extensions
+		#region OpenGL Extensions
+
+		public const int GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT = 0x0001;
 
 		// values taken from https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_create_context.txt
 		public const int WGL_CONTEXT_MAJOR_VERSION_ARB = 0x2091;
@@ -565,8 +583,61 @@ namespace OpenGLControl
 		public const int WGL_CONTEXT_LAYER_PLANE_ARB = 0x2093;
 		public const int WGL_CONTEXT_FLAGS_ARB = 0x2094;
 		public const int WGL_CONTEXT_PROFILE_MASK_ARB = 0x9126;
+		
 
 		public const int WGL_CONTEXT_CORE_PROFILE_BIT_ARB = 0x00000001;
+
+		// values taken from https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_pixel_format.txt
+		public const int WGL_NUMBER_PIXEL_FORMATS_ARB = 0x2000;
+		public const int WGL_DRAW_TO_WINDOW_ARB = 0x2001;
+		public const int WGL_DRAW_TO_BITMAP_ARB = 0x2002;
+		public const int WGL_ACCELERATION_ARB = 0x2003;
+		public const int WGL_NEED_PALETTE_ARB = 0x2004;
+		public const int WGL_NEED_SYSTEM_PALETTE_ARB = 0x2005;
+		public const int WGL_SWAP_LAYER_BUFFERS_ARB = 0x2006;
+		public const int WGL_SWAP_METHOD_ARB = 0x2007;
+		public const int WGL_NUMBER_OVERLAYS_ARB = 0x2008;
+		public const int WGL_NUMBER_UNDERLAYS_ARB = 0x2009;
+		public const int WGL_TRANSPARENT_ARB = 0x200A;
+		public const int WGL_TRANSPARENT_RED_VALUE_ARB = 0x2037;
+		public const int WGL_TRANSPARENT_GREEN_VALUE_ARB = 0x2038;
+		public const int WGL_TRANSPARENT_BLUE_VALUE_ARB = 0x2039;
+		public const int WGL_TRANSPARENT_ALPHA_VALUE_ARB = 0x203A;
+		public const int WGL_TRANSPARENT_INDEX_VALUE_ARB = 0x203B;
+		public const int WGL_SHARE_DEPTH_ARB = 0x200C;
+		public const int WGL_SHARE_STENCIL_ARB = 0x200D;
+		public const int WGL_SHARE_ACCUM_ARB = 0x200E;
+		public const int WGL_SUPPORT_GDI_ARB = 0x200F;
+		public const int WGL_SUPPORT_OPENGL_ARB = 0x2010;
+		public const int WGL_DOUBLE_BUFFER_ARB = 0x2011;
+		public const int WGL_STEREO_ARB = 0x2012;
+		public const int WGL_PIXEL_TYPE_ARB = 0x2013;
+		public const int WGL_COLOR_BITS_ARB = 0x2014;
+		public const int WGL_RED_BITS_ARB = 0x2015;
+		public const int WGL_RED_SHIFT_ARB = 0x2016;
+		public const int WGL_GREEN_BITS_ARB = 0x2017;
+		public const int WGL_GREEN_SHIFT_ARB = 0x2018;
+		public const int WGL_BLUE_BITS_ARB = 0x2019;
+		public const int WGL_BLUE_SHIFT_ARB = 0x201A;
+		public const int WGL_ALPHA_BITS_ARB = 0x201B;
+		public const int WGL_ALPHA_SHIFT_ARB = 0x201C;
+		public const int WGL_ACCUM_BITS_ARB = 0x201D;
+		public const int WGL_ACCUM_RED_BITS_ARB = 0x201E;
+		public const int WGL_ACCUM_GREEN_BITS_ARB = 0x201F;
+		public const int WGL_ACCUM_BLUE_BITS_ARB = 0x2020;
+		public const int WGL_ACCUM_ALPHA_BITS_ARB = 0x2021;
+		public const int WGL_DEPTH_BITS_ARB = 0x2022;
+		public const int WGL_STENCIL_BITS_ARB = 0x2023;
+		public const int WGL_AUX_BUFFERS_ARB = 0x2024;
+
+		public const int WGL_NO_ACCELERATION_ARB = 0x2025;
+		public const int WGL_GENERIC_ACCELERATION_ARB = 0x2026;
+		public const int WGL_FULL_ACCELERATION_ARB = 0x2027;
+		public const int WGL_SWAP_EXCHANGE_ARB = 0x2028;
+		public const int WGL_SWAP_COPY_ARB = 0x2029;
+		public const int WGL_SWAP_UNDEFINED_ARB = 0x202A;
+		public const int WGL_TYPE_RGBA_ARB = 0x202B;
+		public const int WGL_TYPE_COLORINDEX_ARB = 0x202C;
 
 		private delegate IntPtr Delegate_wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList);
 
@@ -574,16 +645,80 @@ namespace OpenGLControl
 		{
 			IntPtr hRC = IntPtr.Zero;
 
-			IntPtr addr = wglGetProcAddress("wglCreateContextAttribsARB");
-			if (addr != IntPtr.Zero)
+			var delegateFunction = WGLGetProcDelegate<Delegate_wglCreateContextAttribsARB>("wglCreateContextAttribsARB");
+			if (delegateFunction != null)
 			{
-				var delegateFunction = (Delegate_wglCreateContextAttribsARB)Marshal.GetDelegateForFunctionPointer(addr, typeof(Delegate_wglCreateContextAttribsARB));
 				hRC = delegateFunction(hDC, hShareContext, attribList);
 			}
 
 			return hRC;
 		}
 
-#endregion
+		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private delegate bool Delegate_wglChoosePixelFormatARB(IntPtr hDC, [In] int[] attribList, [In] float[] pfAttribFList, uint nMaxFormats, [Out] int[] piFormats, out uint numFormats);
+		public static bool wglChoosePixelFormatARB(IntPtr hDC, int[] attribList, float[] pfAttribFList, uint nMaxFormats, out int[] piFormats, out uint numFormats)
+		{
+			bool retVal = false;
+			piFormats = new int[nMaxFormats];
+			numFormats = 0;
+
+			var delegateFunction = WGLGetProcDelegate<Delegate_wglChoosePixelFormatARB>("wglChoosePixelFormatARB");
+			if (delegateFunction != null)
+			{
+				retVal = delegateFunction(hDC, attribList, pfAttribFList, nMaxFormats, piFormats, out numFormats);
+			}
+
+			return retVal;
+		}
+
+		#endregion
+
+
+		private delegate IntPtr Delegate_wglCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList);
+		public static IntPtr wglCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList)
+		{
+			IntPtr retVal = IntPtr.Zero;
+
+			var delegateFunction = WGLGetProcDelegate<Delegate_wglCreatePbufferARB>("wglCreatePbufferARB");
+			if (delegateFunction != null)
+			{
+				retVal = delegateFunction(hDC, iPixelFormat, iWidth, iHeight, piAttribList);
+			}
+
+			return retVal;
+		}
+
+		#region Helper Methods
+
+		private static T GetProcDelegate<T>(IntPtr handle, string procName) where T : Delegate {
+
+			T delegateFunction = null;
+
+			IntPtr addr = GetProcAddress(handle, procName);
+			if (addr != IntPtr.Zero)
+			{
+				delegateFunction = (T)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
+			}
+
+			return delegateFunction;
+		}
+
+		private static T WGLGetProcDelegate<T>(string procName) where T : Delegate
+		{
+
+			T delegateFunction = null;
+			IntPtr hRC = IntPtr.Zero;
+
+			IntPtr addr = wglGetProcAddress(procName);
+			if (addr != IntPtr.Zero)
+			{
+				delegateFunction = (T)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
+			}
+
+			return delegateFunction;
+		}
+
+		#endregion
 	}
 }
