@@ -37,12 +37,14 @@ namespace OpenGLControlTester
 			this.openGLControl1.AllowDebug = true;
 			this.openGLControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.openGLControl1.Location = new System.Drawing.Point(0, 0);
-			this.openGLControl1.MajorVersion = 0;
-			this.openGLControl1.MinorVersion = 0;
+			this.openGLControl1.MajorVersion = 4;
+			this.openGLControl1.MinorVersion = 3;
 			this.openGLControl1.Name = "openGLControl1";
 			this.openGLControl1.Size = new System.Drawing.Size(800, 450);
 			this.openGLControl1.TabIndex = 0;
-			this.openGLControl1.Render += new OpenGLControl.OpenGLControl.RenderDelegate(this.openGLControl1_Render);
+			this.openGLControl1.OnInitialized += new OpenGLControl.OpenGLControl.OpenGLControlDelegate(this.openGLControl1_OnInitialized);
+			this.openGLControl1.Render += new OpenGLControl.OpenGLControl.OpenGLControlDelegate(this.openGLControl1_Render);
+			this.openGLControl1.OnError += new System.EventHandler(this.openGLControl1_OnError);
 			this.openGLControl1.Load += new System.EventHandler(this.openGLControl1_Load);
 			this.openGLControl1.DoubleClick += new System.EventHandler(this.openGLControl1_DoubleClick);
 			// 

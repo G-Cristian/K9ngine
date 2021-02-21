@@ -38,8 +38,9 @@ namespace OpenGLControlTester
 
 		}
 
-		private void openGLControl1_Render(OpenGLControl.OpenGL openGLInstance)
+		private void openGLControl1_Render(OpenGLControl.OpenGLControl sender, OpenGLControl.OpenGLControl.OpenGLControlEventArgs eventArgs)
 		{
+			OpenGLControl.OpenGL openGLInstance = eventArgs.OpenGLInstanse;
 			//For testing
 			if (isRed)
 			{
@@ -51,6 +52,21 @@ namespace OpenGLControlTester
 			}
 
 			isRed = !isRed;
+		}
+
+		private void openGLControl1_OnError(object sender, EventArgs e)
+		{
+			OpenGLControl.OpenGLControl.ErrorEventArgs errorEventArgs = e as OpenGLControl.OpenGLControl.ErrorEventArgs;
+			if(errorEventArgs != null)
+			{
+				Console.WriteLine(errorEventArgs.Msg);
+				Console.WriteLine(errorEventArgs.StackTrace);
+			}
+		}
+
+		private void openGLControl1_OnInitialized(OpenGLControl.OpenGLControl sender, OpenGLControl.OpenGLControl.OpenGLControlEventArgs eventArgs)
+		{
+			//openGLControl1.CreateAndBindVertexArrayObject();
 		}
 	}
 }
