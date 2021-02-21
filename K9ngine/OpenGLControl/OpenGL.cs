@@ -9,12 +9,25 @@ namespace OpenGLControl
 {
 	public class OpenGL : IDisposable
 	{
-		#region Structs
+
+		#region Structs & classes
 
 		public struct Settings
 		{
 			public int majorVersion;
 			public int minorVersion;
+		}
+
+		public class OpenGLException : Exception
+		{
+			public int LastWin32Error { get; private set; }
+			public List<int> OpenGLErrors { get; private set; }
+			public OpenGLException(int lastWin32Error, List<int> openGLErrors, string msg) :
+				base(msg)
+			{
+				LastWin32Error = lastWin32Error;
+				OpenGLErrors = openGLErrors;
+			}
 		}
 
 		#endregion
@@ -93,22 +106,30 @@ namespace OpenGLControl
 		private void CreateSpecificVersion(int majorVersion, int minorVersion)
 		{
 			//TODO: If I'm not wrong this only work for OpenGL version >= 3.2
-			int[] attribs = {
+			if (majorVersion > 3 || (majorVersion == 3 && minorVersion >= 2))
+			{
+				int[] attribs = {
 								OpenGLWrapperClass.WGL_CONTEXT_MAJOR_VERSION_ARB, majorVersion,
 								OpenGLWrapperClass.WGL_CONTEXT_MINOR_VERSION_ARB, minorVersion,
 								OpenGLWrapperClass.WGL_CONTEXT_PROFILE_MASK_ARB, OpenGLWrapperClass.WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+								//OpenGLWrapperClass.WGL_CONTEXT_FLAGS_ARB, OpenGLWrapperClass.GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT,
 								0
-			};
+				};
 
-			IntPtr newHRC = OpenGLWrapperClass.wglCreateContextAttribsARB(_hDC, IntPtr.Zero, attribs);
-			ThrowIfError();
-			if (newHRC != IntPtr.Zero)
-			{
-				OpenGLWrapperClass.wglDeleteContext(_hRC);
-				ThrowLatsWin32Error();
-				OpenGLWrapperClass.wglMakeCurrent(_hDC, newHRC);
+				IntPtr newHRC = OpenGLWrapperClass.wglCreateContextAttribsARB(_hDC, IntPtr.Zero, attribs);
 				ThrowIfError();
-				_hRC = newHRC;
+				if (newHRC != IntPtr.Zero)
+				{
+					OpenGLWrapperClass.wglDeleteContext(_hRC);
+					ThrowLatsWin32Error();
+					OpenGLWrapperClass.wglMakeCurrent(_hDC, newHRC);
+					ThrowIfError();
+					_hRC = newHRC;
+				}
+			}
+			else
+			{
+				throw new Exception("Cannot create OpenGL context <= 3.2");
 			}
 		}
 
@@ -184,7 +205,7 @@ namespace OpenGLControl
 				int error = Marshal.GetLastWin32Error();
 				if (error != 0)
 				{
-					msg = "Last Win32 Error: " + error + "\n";
+					msg = error.ToString();
 				}
 
 				if (!string.IsNullOrEmpty(msg))
@@ -208,7 +229,12 @@ namespace OpenGLControl
 
 					for (int i = 0; i < numberOfErrors; ++i)
 					{
-						msg += "OpenGL errors: " + errors[i] + "\n";
+						int intError = 0;
+						msg += errors[i];
+						if(i < (numberOfErrors - 1))
+						{
+							msg += ",";
+						}
 					}
 				} while (moreErrors[0]);
 
@@ -223,14 +249,16 @@ namespace OpenGLControl
 			if (AllowDebug)
 			{
 				string msg = string.Empty;
-
+				int lastWin32Error = 0;
+				List<int> openGLErrors = new List<int>();
 				try
 				{
 					ThrowLatsWin32Error();
 				}
 				catch(Exception e)
 				{
-					msg = e.Message;
+					int.TryParse(e.Message, out lastWin32Error);
+					msg += "LastWin32Error: " + e.Message;
 				}
 
 				try
@@ -239,12 +267,20 @@ namespace OpenGLControl
 				}
 				catch (Exception e)
 				{
-					msg += e.Message;
+					msg += "OpenGLErrors: " + e.Message;
+					string eMsg = e.Message;
+					string[] openGLErrorsStr = eMsg.Split(',');
+					foreach (string openGLErrorStr in openGLErrorsStr)
+					{
+						int openGLError = 0;
+						int.TryParse(openGLErrorStr, out openGLError);
+						openGLErrors.Add(openGLError);
+					}
 				}
 
 				if (!string.IsNullOrEmpty(msg))
 				{
-					throw new Exception(msg);
+					throw new OpenGLException(lastWin32Error, openGLErrors, msg);
 				}
 			}
 		}
@@ -253,6 +289,57 @@ namespace OpenGLControl
 		{
 			OpenGLWrapperClass.wglMakeCurrent(_hDC, _hRC);
 			ThrowIfError();
+		}
+
+		#endregion
+
+		#region Buffers Creation
+
+		/// <summary>
+		/// Creates and binds a vertex array object.
+		/// </summary>
+		/// <returns>The vertex array object (VAO).</returns>
+		public uint CreateAndBindVertexArrayObject()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates an array buffer (GL_ARRAY_BUFFER)
+		/// </summary>
+		/// <param name="attributes">Array of attributes.</param>
+		/// <returns>The vertex buffer object (VBO)</returns>
+		public uint CreateArrayBuffer(float[] attributes)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Creates an element array buffer (GL_ELEMENT_ARRAY_BUFFER)
+		/// </summary>
+		/// <param name="attributes">Array of attributes.</param>
+		/// <returns>The vertex buffer object (VBO)</returns>
+		public uint CreateElementArrayBuffer(int[] attributes)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
+
+		#region Rendering Program Creation
+
+		public uint CreateReneringProgram(string vertexShaderFilePath, string fragmentShaderFilePath)
+		{
+			int errorCode = 0;
+			string errorMsg = string.Empty;
+			uint renderingProgram = OpenGLWrapperClass.createRenderingProgram(vertexShaderFilePath, fragmentShaderFilePath, ref errorCode, ref errorMsg);
+			if (AllowDebug && errorCode != 1)
+			{
+				throw new Exception(errorMsg);
+			}
+			ThrowIfError();
+
+			return renderingProgram;
 		}
 
 		#endregion
