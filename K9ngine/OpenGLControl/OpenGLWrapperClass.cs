@@ -26,6 +26,8 @@ namespace OpenGLControl
 
 			OpenGLWrapperLibraryHandle = LoadLibrary(OpenGLWrapper_dll);
 			//error = Marshal.GetLastWin32Error();
+
+			InitDelegateFunctions();
 		}
 
 		#region kernel32.dll
@@ -199,18 +201,8 @@ namespace OpenGLControl
 		//[DllImport(OpenGLWrapper_dll, SetLastError = true, CallingConvention = CallingConvention.Cdecl)]
 		//public static extern int initGlew();
 
-		private delegate int Delegate_initGlew();
-		public static int initGlew()
-		{
-			int retCode = -1;
-			var delegateFunction = GetProcDelegate<Delegate_initGlew>(OpenGLWrapperLibraryHandle, "initGlew");
-			if (delegateFunction != null)
-			{
-				retCode = delegateFunction();
-			}
-
-			return retCode;
-		}
+		//public delegate int initGlew();
+		//public static initGlew InitGlew = GetProcDelegate<initGlew>(OpenGLWrapperLibraryHandle);
 
 		/// <summary>
 		/// Clears color buffer (GL_COLOR_BUFFER_BIT)
@@ -639,84 +631,81 @@ namespace OpenGLControl
 		public const int WGL_TYPE_RGBA_ARB = 0x202B;
 		public const int WGL_TYPE_COLORINDEX_ARB = 0x202C;
 
-		private delegate IntPtr Delegate_wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList);
-
-		public static IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList)
+		private delegate IntPtr wglCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList);
+		private static wglCreateContextAttribsARB _WGLCreateContextAttribsARB = null;
+		
+		public static IntPtr WGLCreateContextAttribsARB(IntPtr hDC, IntPtr hShareContext, int[] attribList)
 		{
-			IntPtr hRC = IntPtr.Zero;
-
-			var delegateFunction = WGLGetProcDelegate<Delegate_wglCreateContextAttribsARB>("wglCreateContextAttribsARB");
-			if (delegateFunction != null)
+			if (_WGLCreateContextAttribsARB == null)
 			{
-				hRC = delegateFunction(hDC, hShareContext, attribList);
+				_WGLCreateContextAttribsARB = WGLGetProcDelegate<wglCreateContextAttribsARB>();
 			}
 
-			return hRC;
+			return _WGLCreateContextAttribsARB(hDC, hShareContext, attribList);
 		}
+
 
 		[UnmanagedFunctionPointer(CallingConvention.Winapi)]
 		[return: MarshalAs(UnmanagedType.Bool)]
-		private delegate bool Delegate_wglChoosePixelFormatARB(IntPtr hDC, [In] int[] attribList, [In] float[] pfAttribFList, uint nMaxFormats, [Out] int[] piFormats, out uint numFormats);
-		public static bool wglChoosePixelFormatARB(IntPtr hDC, int[] attribList, float[] pfAttribFList, uint nMaxFormats, out int[] piFormats, out uint numFormats)
+		private delegate bool wglChoosePixelFormatARB(IntPtr hDC, [In] int[] attribList, [In] float[] pfAttribFList, uint nMaxFormats, [Out] out int[] piFormats, out uint numFormats);
+		private static wglChoosePixelFormatARB _WGLChoosePixelFormatARB= null;
+
+		public static bool WGLChoosePixelFormatARB(IntPtr hDC, int[] attribList, float[] pfAttribFList, uint nMaxFormats, out int[] piFormats, out uint numFormats)
 		{
-			bool retVal = false;
-			piFormats = new int[nMaxFormats];
-			numFormats = 0;
-
-			var delegateFunction = WGLGetProcDelegate<Delegate_wglChoosePixelFormatARB>("wglChoosePixelFormatARB");
-			if (delegateFunction != null)
+			if (_WGLChoosePixelFormatARB == null)
 			{
-				retVal = delegateFunction(hDC, attribList, pfAttribFList, nMaxFormats, piFormats, out numFormats);
+				_WGLChoosePixelFormatARB = WGLGetProcDelegate<wglChoosePixelFormatARB>();
 			}
-
-			return retVal;
+			return _WGLChoosePixelFormatARB(hDC, attribList, pfAttribFList, nMaxFormats, out piFormats, out numFormats);
 		}
 
 		#endregion
 
 
-		private delegate IntPtr Delegate_wglCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList);
-		public static IntPtr wglCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList)
+		private delegate IntPtr wglCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList);
+		private static wglCreatePbufferARB _WGLCreatePbufferARB = null;
+
+		public static IntPtr WGLCreatePbufferARB(IntPtr hDC, int iPixelFormat, int iWidth, int iHeight, int[] piAttribList)
 		{
-			IntPtr retVal = IntPtr.Zero;
-
-			var delegateFunction = WGLGetProcDelegate<Delegate_wglCreatePbufferARB>("wglCreatePbufferARB");
-			if (delegateFunction != null)
+			if(_WGLCreatePbufferARB == null)
 			{
-				retVal = delegateFunction(hDC, iPixelFormat, iWidth, iHeight, piAttribList);
+				_WGLCreatePbufferARB = WGLGetProcDelegate<wglCreatePbufferARB>();
 			}
-
-			return retVal;
+			return _WGLCreatePbufferARB(hDC, iPixelFormat, iWidth, iHeight, piAttribList);
 		}
-
 		#region Helper Methods
 
-		private static T GetProcDelegate<T>(IntPtr handle, string procName) where T : Delegate {
-
-			T delegateFunction = null;
-
-			IntPtr addr = GetProcAddress(handle, procName);
-			if (addr != IntPtr.Zero)
-			{
-				delegateFunction = (T)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
-			}
-
-			return delegateFunction;
+		private static void InitDelegateFunctions()
+		{
 		}
 
-		private static T WGLGetProcDelegate<T>(string procName) where T : Delegate
+		private static T GetProcDelegate<T>(IntPtr handle) where T : Delegate
 		{
+			Type typeOfT = typeof(T);
+			string functionName = typeOfT.Name;
+			IntPtr address = GetProcAddress(handle, functionName);
 
-			T delegateFunction = null;
-			IntPtr hRC = IntPtr.Zero;
-
-			IntPtr addr = wglGetProcAddress(procName);
-			if (addr != IntPtr.Zero)
+			if(address == IntPtr.Zero)
 			{
-				delegateFunction = (T)Marshal.GetDelegateForFunctionPointer(addr, typeof(T));
+				throw new NotSupportedException("Function not supported: " + functionName);
 			}
 
-			return delegateFunction;
+			return (T)Marshal.GetDelegateForFunctionPointer(address, typeOfT); ;
+		}
+
+		private static T WGLGetProcDelegate<T>() where T : Delegate
+		{
+
+			Type typeOfT = typeof(T);
+			string functionName = typeOfT.Name;
+
+			IntPtr address = wglGetProcAddress(functionName);
+			if (address == IntPtr.Zero)
+			{
+				throw new NotSupportedException("Function not supported: " + functionName);
+			}
+
+			return (T)Marshal.GetDelegateForFunctionPointer(address, typeOfT);
 		}
 
 		#endregion

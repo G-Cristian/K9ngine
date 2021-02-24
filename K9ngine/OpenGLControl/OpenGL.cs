@@ -116,7 +116,7 @@ namespace OpenGLControl
 								0
 				};
 
-				IntPtr newHRC = OpenGLWrapperClass.wglCreateContextAttribsARB(_hDC, IntPtr.Zero, attribs);
+				IntPtr newHRC = OpenGLWrapperClass.WGLCreateContextAttribsARB(_hDC, IntPtr.Zero, attribs);
 				ThrowIfError();
 				if (newHRC != IntPtr.Zero)
 				{
