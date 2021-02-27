@@ -30,6 +30,7 @@ namespace K9 {
 			glm::mat4 initProjMatrix(const World& world) const;
 			void initLights(const World& world, const glm::mat4& viewMatrix) const;
 			void initMaterial(GLint ambientLoc, GLint diffuseLoc, GLint specularLoc, GLint shininessLoc, const glm::vec4& ambient, const glm::vec4& diffuse, const glm::vec4& specular, float shininess)const;
+			void initShadowAttributes(GLfloat shadowWidth, glm::vec2 windowSize, GLboolean betterPerformance)const;
 
 			GLuint _renderingProgram;
 			GLuint _shadowBuffer;

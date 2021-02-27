@@ -34,6 +34,16 @@ uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
 uniform mat4 shadowMVP2_matrix;
 
+uniform float shadowWidth;
+uniform vec2 windowSize;
+uniform bool betterPerformance; //uses dithering insted of sampling lots of texels
+
+float lookup(float ox, float oy){
+	return textureProj(shadowTexture, shadowCoord + vec4(ox * 1.0/windowSize.x * shadowCoord.w,
+														 oy * 1.0/windowSize.y * shadowCoord.w,
+														 -0.01, 0.0));
+}
+
 void main(){
 	vec3 L = normalize(varyingLightDir);
 	vec3 N = normalize(varyingNormal);
@@ -42,21 +52,39 @@ void main(){
 	//vec3 R = normalize(reflect(-L, N));
 	vec3 H = normalize(varyingHalfVector);
 	
-	float notInShadow = textureProj(shadowTexture, shadowCoord);
-
-	fragColor = globalAmbient*material.ambient + light0.ambient*material.ambient;
+	float shadowFactor = 0.0;
 	
-	if(notInShadow != 0.0){
-		float cosTheta = dot(L, N);
-		//float cosPhi = dot(V, R);
-		float cosPhi = dot(H, N);
-
-		vec4 diffuse = light0.diffuse * material.diffuse * max(0.0f, cosTheta);
-		//vec4 specular = light0.specular * material.specular * pow(max(0.0f, cosPhi), material.shininess);
-		//vec4 specular = light0.specular * material.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
-		//vec4 specular = light0.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
-		vec4 specular = light0.specular*material.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
-
-		fragColor += diffuse + specular;
+	if(betterPerformance){
+		vec2 offset = mod(floor(gl_FragCoord.xy), 2.0) * shadowWidth;
+		shadowFactor += lookup(-1.5 * shadowWidth + offset.x, 1.5 * shadowWidth - offset.y);
+		shadowFactor += lookup(-1.5 * shadowWidth + offset.x, -0.5 * shadowWidth - offset.y);
+		shadowFactor += lookup(0.5 * shadowWidth + offset.x, 1.5 * shadowWidth - offset.y);
+		shadowFactor += lookup(0.5 * shadowWidth + offset.x, -0.5 * shadowWidth - offset.y);
+		shadowFactor = shadowFactor / 4.0;
 	}
+	else{
+		float endp = shadowWidth * 3.0 + shadowWidth / 2.0;
+		for(float m = -endp; m <= endp; m=m+shadowWidth){
+			for(float n = -endp; n <= endp; n=n+shadowWidth){
+				shadowFactor += lookup(m,n);
+			}
+		}
+
+		shadowFactor = shadowFactor / 64.0;
+	}
+
+	vec4 shadowColor = globalAmbient*material.ambient + light0.ambient*material.ambient;
+	
+	float cosTheta = dot(L, N);
+	vec4 diffuse = light0.diffuse * material.diffuse * max(0.0f, cosTheta);
+	
+	float cosPhi = dot(H, N);
+	//vec4 specular = light0.specular * material.specular * pow(max(0.0f, cosPhi), material.shininess);
+	//vec4 specular = light0.specular * material.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
+	//vec4 specular = light0.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
+	vec4 specular = light0.specular*material.specular * pow(max(0.0f, cosPhi), material.shininess*3.0);
+
+	vec4 lightedColor = diffuse + specular;
+
+	fragColor = vec4((shadowColor.xyz + shadowFactor*(lightedColor.xyz)), 1.0);
 }

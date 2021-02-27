@@ -51,6 +51,18 @@ namespace K9 {
 
 			initLights(world, v_mat);
 
+			auto wCamera = world.getActiveCamera();
+			K9_ASSERT(!wCamera.expired());
+			auto camera = wCamera.lock();
+			K9_ASSERT(camera != nullptr);
+			if (camera != nullptr) {
+				initShadowAttributes(2.5f, glm::vec2(camera->width(), camera->height()), GL_FALSE);
+			}
+			else {
+				initShadowAttributes(2.5f, glm::vec2(1000.0, 1000.0), GL_FALSE);
+			}
+			
+
 			const auto& positionalLights = world.getPositionalLights();
 			auto lightVMat = glm::mat4(1.0f);
 			auto lightPMat = glm::mat4(1.0f);
@@ -60,10 +72,6 @@ namespace K9 {
 				if (light != nullptr) {
 					lightVMat = glm::lookAt(light->location(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 					float fov = 90.0f * 3.14f / 180.0f;
-					auto wCamera = world.getActiveCamera();
-					K9_ASSERT(!wCamera.expired());
-					auto camera = wCamera.lock();
-					K9_ASSERT(camera != nullptr);
 					if (camera != nullptr) {
 						lightPMat = glm::perspective(fov, camera->aspectRation(), 0.1f, 1000.0f);
 					}
@@ -207,6 +215,17 @@ namespace K9 {
 			programUniform4fv(_renderingProgram, diffuseLoc, glm::value_ptr(diffuse));
 			programUniform4fv(_renderingProgram, specularLoc, glm::value_ptr(specular));
 			programUniform1f(_renderingProgram, shininessLoc, shininess);
+		}
+
+		void LightMaterialShadowRenderer::initShadowAttributes(GLfloat shadowWidth, glm::vec2 windowSize, GLboolean betterPerformance)const {
+			GLint shadowWidthLoc = getUniformLocation(_renderingProgram, "shadowWidth");
+			programUniform1f(_renderingProgram, shadowWidthLoc, shadowWidth);
+
+			GLint windowSizeLoc = getUniformLocation(_renderingProgram, "windowSize");
+			programUniform2fv(_renderingProgram, windowSizeLoc, glm::value_ptr(windowSize));
+
+			GLint betterPerformanceLoc = getUniformLocation(_renderingProgram, "betterPerformance");
+			programUniform1i(_renderingProgram, betterPerformanceLoc, betterPerformance);
 		}
 	}
 }

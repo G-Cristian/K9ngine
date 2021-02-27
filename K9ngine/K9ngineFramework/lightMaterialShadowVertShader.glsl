@@ -35,6 +35,10 @@ uniform mat4 proj_matrix;
 uniform mat4 norm_matrix;
 uniform mat4 shadowMVP2_matrix;
 
+uniform float shadowWidth;
+uniform vec2 windowSize;
+uniform bool betterPerformance; //uses dithering insted of sampling lots of texels
+
 void main(){
 	varyingVertPos = (mv_matrix*vec4(vertPos, 1.0)).xyz;
 	varyingLightDir = normalize(light0.position - varyingVertPos); //light is in view dimention (done in c++)
