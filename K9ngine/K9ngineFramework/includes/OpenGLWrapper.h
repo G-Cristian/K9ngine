@@ -215,13 +215,31 @@ extern "C" OPENGLWRAPPER_API GLint getUniformLocation(GLuint renderingProgram, c
 extern "C" OPENGLWRAPPER_API void setUniformMatrix4fv(GLint matrixLocation, GLfloat* matrix);
 
 /// <summary>
-/// Sends value to the rendering program in the specified location
+/// Sends int value to the rendering program in the specified location
 /// </summary>
 /// <param name="renderingProgram">Rendering program</param>
 /// <param name="location">Location</param>
-/// <param name="value">Value to send</param>
+/// <param name="value">Int value to send</param>
+/// <returns></returns>
+extern "C" OPENGLWRAPPER_API void programUniform1i(GLuint renderingProgram, GLint location, GLint value);
+
+/// <summary>
+/// Sends float value to the rendering program in the specified location
+/// </summary>
+/// <param name="renderingProgram">Rendering program</param>
+/// <param name="location">Location</param>
+/// <param name="value">Float value to send</param>
 /// <returns></returns>
 extern "C" OPENGLWRAPPER_API void programUniform1f(GLuint renderingProgram, GLint location, GLfloat value);
+
+/// <summary>
+/// Sends an array of two elements to the rendering program in the specified location
+/// </summary>
+/// <param name="renderingProgram">Rendering program</param>
+/// <param name="location">Location</param>
+/// <param name="value">Array to send</param>
+/// <returns></returns>
+extern "C" OPENGLWRAPPER_API void programUniform2fv(GLuint renderingProgram, GLint location, const GLfloat * value);
 
 /// <summary>
 /// Sends an array of three elements to the rendering program in the specified location

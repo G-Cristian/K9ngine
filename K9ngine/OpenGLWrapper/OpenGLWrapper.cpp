@@ -281,8 +281,16 @@ void setUniformMatrix4fv(GLint matrixLocation, GLfloat* matrix) {
 	glUniformMatrix4fv(matrixLocation, 1, GL_FALSE, matrix);
 }
 
+void programUniform1i(GLuint renderingProgram, GLint location, GLint value) {
+	glProgramUniform1i(renderingProgram, location, value);
+}
+
 void programUniform1f(GLuint renderingProgram, GLint location, GLfloat value) {
 	glProgramUniform1f(renderingProgram, location, value);
+}
+
+void programUniform2fv(GLuint renderingProgram, GLint location, const GLfloat* value) {
+	glProgramUniform2fv(renderingProgram, location, 1, value);
 }
 
 void programUniform3fv(GLuint renderingProgram, GLint location, const GLfloat* value) {
