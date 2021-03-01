@@ -29,6 +29,10 @@ namespace K9 {
 			TexturesPool& operator=(TexturesPool&&) noexcept = delete;
 
 			std::weak_ptr<Texture> createTexture(const std::string& textureFile);
+			std::weak_ptr<Texture> createTextureCubeMap(const std::string& textureName,
+														const std::string& right, const std::string& left,
+														const std::string& top, const std::string& bottom,
+														const std::string& front, const std::string& back);
 
 		private:
 			TexturesPool() = default;

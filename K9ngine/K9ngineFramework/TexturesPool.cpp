@@ -46,5 +46,27 @@ namespace K9 {
 				}
 			}
 		}
+
+		std::weak_ptr<Texture> TexturesPool::createTextureCubeMap(	const std::string& textureName, 
+																	const std::string& right, const std::string& left,
+																	const std::string& top, const std::string& bottom,
+																	const std::string& front, const std::string& back) {
+			auto it = _texturesPool.find(textureName);
+			if (it != _texturesPool.end()) {
+				return std::weak_ptr<Texture>(it->second);
+			}
+			else {
+				int returnCode = 0;
+				GLuint textureID = loadAndCreateCubeMapTexture(right.c_str(), left.c_str(), top.c_str(), bottom.c_str(), front.c_str(), back.c_str(), true, &returnCode);
+				K9_ASSERT(returnCode == 1);
+				if (returnCode != 1) {
+					return std::weak_ptr<Texture>();
+				}
+				else {
+					auto ret = _texturesPool.insert({ textureName, std::make_shared<Texture>(textureName, textureID) });
+					return std::weak_ptr<Texture>(ret.first->second);
+				}
+			}
+		}
 	}
 }
