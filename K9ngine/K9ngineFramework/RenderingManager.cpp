@@ -9,6 +9,11 @@
 
 namespace K9 {
 	namespace Graphics {
+		bool rendererComparer(const std::shared_ptr<const IRenderer>& left, const std::shared_ptr<const IRenderer>& right) {
+			return (left == nullptr || (right != nullptr && left->name() < right->name()));
+		}
+
+
 		std::unique_ptr<RenderingManager> RenderingManager::_instance = nullptr;
 
 		RenderingManager::~RenderingManager() {

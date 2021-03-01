@@ -13,7 +13,7 @@
 namespace K9 {
 	class World;
 	namespace Graphics {
-
+		bool rendererComparer(const std::shared_ptr<const IRenderer>& left, const std::shared_ptr<const IRenderer>& right);
 		class RenderingManager {
 		public:
 			~RenderingManager();
@@ -43,7 +43,9 @@ namespace K9 {
 			void removeRenderingComponentFromRenderer(std::shared_ptr<const K9::Components::RenderingComponent> renderingComponent, std::shared_ptr<const IRenderer> renderer);
 
 		private:
-			RenderingManager() = default;
+			RenderingManager() :
+				_renderersRenderingComponents(rendererComparer) {
+			}
 
 			bool isRendererInRenderers(const IRenderer&)const;
 			bool isRendererInRenderers(const std::string&)const;
@@ -53,7 +55,7 @@ namespace K9 {
 
 			static std::unique_ptr<RenderingManager> _instance;
 			std::map<std::string, std::shared_ptr<const IRenderer>> _renderers;
-			std::map<std::shared_ptr<const IRenderer>, std::set<std::shared_ptr<const K9::Components::RenderingComponent>>> _renderersRenderingComponents;
+			std::map<std::shared_ptr<const IRenderer>, std::set<std::shared_ptr<const K9::Components::RenderingComponent>>, decltype(rendererComparer)*> _renderersRenderingComponents;
 		};
 	}
 }
