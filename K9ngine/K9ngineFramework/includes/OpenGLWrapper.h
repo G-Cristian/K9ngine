@@ -136,6 +136,12 @@ extern "C" OPENGLWRAPPER_API void enableCullFace();
 extern "C" OPENGLWRAPPER_API void enableDepthTest();
 
 /// <summary>
+/// Disable depth test (glDisable(GL_DEPTH_TEST))
+/// </summary>
+/// <returns></returns>
+extern "C" OPENGLWRAPPER_API void disableDepthTest();
+
+/// <summary>
 /// Sets depth function to use (calls glDepthFunc)
 /// </summary>
 /// <param name="depthFunction">Depth function to use (e.g. GL_LEQUAL)</param>
@@ -197,6 +203,24 @@ extern "C" OPENGLWRAPPER_API GLuint createElementArrayBuffer(const int* attribut
 /// <param name="returnCode">Out variable used for setting a return value (errors, etc.)</param>
 /// <returns>Buffer object for the texture</returns>
 extern "C" OPENGLWRAPPER_API GLuint loadAndCreateTexture(const char* textureImagePath, int* returnCode);
+
+/// <summary>
+/// Loads six textures and creates an OpenGL texture cube map
+/// </summary>
+/// <param name="right">Right face image file name</param>
+/// <param name="left">Left face image file name</param>
+/// <param name="top">Top face image file name</param>
+/// <param name="bottom">Bottom face image file name</param>
+/// <param name="front">Front face image file name</param>
+/// <param name="back">Back face image file name</param>
+/// <param name="setWrapModeToClampToEdge">if true, it will set texture cube map wrap mode for s,t,r to GL_CLAM_TO_EDGE</param>
+/// <param name="returnCode">Out variable used for setting a return value (errors, etc.) (if OK, *returnCode==1)</param>
+/// <returns>Buffer object for the texture cube map</returns>
+extern "C" OPENGLWRAPPER_API GLuint loadAndCreateCubeMapTexture(const char* right, const char* left,
+																const char* top, const char* bottom,
+																const char* front, const char* back,
+																bool setWrapModeToClampToEdge,
+																int* returnCode);
 
 /// <summary>
 /// Gets the location for a uniform.

@@ -213,6 +213,10 @@ void enableDepthTest() {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void disableDepthTest() {
+	glDisable(GL_DEPTH_TEST);
+}
+
 void setDepthFunction(GLenum depthFunction) {
 	glDepthFunc(depthFunction);
 }
@@ -271,6 +275,30 @@ GLuint loadAndCreateTexture(const char* textureImagePath, int* returnCode) {
 	}
 
 	return textureID;
+}
+
+GLuint loadAndCreateCubeMapTexture(	const char* right, const char* left,
+									const char* top, const char* bottom,
+									const char* front, const char* back,
+									bool setWrapModeToClampToEdge,
+									int* returnCode) {
+	GLuint textureCubeMapID = 0;
+	*returnCode = 1;
+
+	textureCubeMapID = SOIL_load_OGL_cubemap(right, left, top, bottom, front, back, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+
+	if (textureCubeMapID == 0) {
+		*returnCode = -1;
+	}
+	else if(setWrapModeToClampToEdge){
+		glBindTexture(GL_TEXTURE_CUBE_MAP, textureCubeMapID);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	return textureCubeMapID;
 }
 
 GLint getUniformLocation(GLuint renderingProgram, const char* attributeName) {
