@@ -150,8 +150,10 @@
     <ClInclude Include="includes\ColorMaterial.h" />
     <ClInclude Include="includes\ColorMaterialFactory.h" />
     <ClInclude Include="includes\Component.h" />
+    <ClInclude Include="includes\CubeMapRenderer.h" />
     <ClInclude Include="includes\DemoChapter7.h" />
     <ClInclude Include="includes\DemoChapter8.h" />
+    <ClInclude Include="includes\DemoCubeMap1.h" />
     <ClInclude Include="includes\DirectionalLight.h" />
     <ClInclude Include="includes\FloatMaterialComponent.h" />
     <ClInclude Include="includes\GameObject.h" />
@@ -181,8 +183,10 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorMaterial.cpp" />
     <ClCompile Include="ColorMaterialFactory.cpp" />
+    <ClCompile Include="CubeMapRenderer.cpp" />
     <ClCompile Include="DemoChapter7.cpp" />
     <ClCompile Include="DemoChapter8.cpp" />
+    <ClCompile Include="DemoCubeMap1.cpp" />
     <ClCompile Include="GameObjectComponentsPool.cpp" />
     <ClCompile Include="LightMaterialShadowRenderer.cpp" />
     <ClCompile Include="main.cpp" />
