@@ -4,6 +4,7 @@
 
 #include <ColorMaterial.h>
 #include <ColorMaterialFactory.h>
+#include <EnvironmentMappingTextureRenderer.h>
 #include <FloatMaterialComponent.h>
 #include <GameObject.h>
 #include <GameObjectComponentsPool.h>
@@ -27,6 +28,7 @@ namespace K9 {
 		void DemoCubeMap1::init() {
 			initRenderers();
 			initCube();
+			initCube2();
 			initTorus();
 			initLights();
 			initCamera();
@@ -37,8 +39,8 @@ namespace K9 {
 			auto camera = cameraWeak.lock();
 			if (camera != nullptr) {
 				float angle = dt * 2.0f * 3.14f / 180.0f;
-				//camera->rotateX(dt);
-				//camera->rotateY(dt);
+				camera->rotateX(dt);
+				camera->rotateY(dt);
 			}
 		}
 
@@ -71,6 +73,20 @@ namespace K9 {
 			RenderingManager::instance().addRenderer(cubeMapRenderer);
 
 			glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
+			auto cubeMapTexture = TexturesPool::instance().createTextureCubeMap("cubeMap",
+				"cubeMap\\xp.jpg", "cubeMap\\xn.jpg",
+				"cubeMap\\yp.jpg", "cubeMap\\yn.jpg"
+				, "cubeMap\\zp.jpg", "cubeMap\\zn.jpg");
+
+			GLuint environmentMappingTextureRenderingProgram = createRenderingProgram("environmentMappingTextureVertShader.glsl", "environmentMappingTextureFragShader.glsl", returnCode, outMsg);
+			if (returnCode != 1) {
+				std::cout << "Error creating environmentMappingTexture shader: " << outMsg << std::endl;
+			}
+			K9_ASSERT(returnCode == 1);
+
+			auto environmentMappingTextureRenderer = std::make_shared<EnvironmentMappingTextureRenderer>("EnvironmentMappingTextureRenderer", environmentMappingTextureRenderingProgram, cubeMapTexture);
+			RenderingManager::instance().addRenderer(environmentMappingTextureRenderer);
 		}
 
 		void DemoCubeMap1::initCube() {
@@ -113,6 +129,48 @@ namespace K9 {
 
 			cubeRenderingComponent->setColorMaterial(cubeMaterial);
 			auto renderer = RenderingManager::instance().getRenderer("CubeMapRenderer");
+			GameObjectComponentsPool::instance().attachRendererAndRenderingComponent(renderer, cubeRenderingComponent);
+		}
+
+		void DemoCubeMap1::initCube2() {
+			using namespace K9::Components;
+			using namespace K9::Graphics;
+
+			auto cubeObject = std::make_shared<GameObject>("Cube2");
+			cubeObject->scale() = glm::vec3(1.0f, 1.0f, 1.0f);
+			cubeObject->position() = glm::vec3(2.0f, 2.0f, -3.0f);
+			cubeObject->localRotation() = glm::vec3(0.0f, 20.0f * 3.14f / 180.0f, 0.0f);
+			_world->addGameObject(cubeObject);
+
+			auto cubeRenderingComponent = std::make_shared<RenderingComponent>(cubeObject, "cube2RenderingComponent");
+			GameObjectComponentsPool::instance().addRenderingComponentByGameObjectName(cubeObject->name(), cubeRenderingComponent);
+
+			auto cubeModel = ModelsPool::instance().createCube();
+			cubeRenderingComponent->setModel(cubeModel);
+
+
+			auto brickTexture = TexturesPool::instance().createTexture("brick1.jpg");
+
+			//auto cmTxt = cubeMapTexture.lock();
+			//if (cmTxt != nullptr) {
+			//	cmTxt->setMinificationMipmapModeLinearMipmapLinear();
+			//	cmTxt->setMaxTextureFilterAnisotropic();
+			//}
+			auto textureMaterianComponent = std::make_shared<TextureMaterialComponent>();
+			textureMaterianComponent->setTexture(brickTexture);
+
+			auto goldMaterial = ColorMaterialFactory::createGoldColorMaterial();
+			auto vectorMaterialComponent = goldMaterial->getSpecularComponent();
+			auto floatMaterialComponent = goldMaterial->getShininessComponent();
+
+			auto cubeMaterial = std::make_shared<ColorMaterial>("Cube2ColorMaterial");
+			cubeMaterial->setAmbientComponent(textureMaterianComponent);
+			cubeMaterial->setDiffuseComponent(textureMaterianComponent);
+			cubeMaterial->setSpecularComponent(vectorMaterialComponent);
+			cubeMaterial->setShininessComponent(floatMaterialComponent);
+
+			cubeRenderingComponent->setColorMaterial(cubeMaterial);
+			auto renderer = RenderingManager::instance().getRenderer("EnvironmentMappingTextureRenderer");
 			GameObjectComponentsPool::instance().attachRendererAndRenderingComponent(renderer, cubeRenderingComponent);
 		}
 
@@ -172,7 +230,7 @@ namespace K9 {
 			int width, height;
 			glfwGetFramebufferSize(_window, &width, &height);
 			auto camera = std::make_shared<Camera>("MainCamera", (float)width, (float)height);
-			camera->moveTo(glm::vec3(0.0f, 0.0f, 3.5f));
+			camera->moveTo(glm::vec3(0.0f, 0.0f, 8.5f));
 
 			_world->addCamera(camera);
 			_world->setActiveCamera(camera->name());

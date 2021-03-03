@@ -19,6 +19,7 @@ namespace K9 {
 		private:
 			void initRenderers();
 			void initCube();
+			void initCube2();
 			void initTorus();
 			void initLights();
 			void initCamera();
