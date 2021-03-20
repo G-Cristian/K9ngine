@@ -191,6 +191,7 @@ namespace K9 {
 				std::vector<float> vertexPositions = std::vector<float>(numVertices * 3);
 				std::vector<float> vertexNormals = std::vector<float>(numVertices * 3);
 				std::vector<float> textureCoordinates = std::vector<float>(numVertices * 2);
+				std::vector<float> tangents = std::vector<float>(numVertices * 3);
 				std::vector<int> indices = std::vector<int>(numIndices);
 
 				for (int slice = 0; slice <= slicesPrecision; ++slice) {
@@ -211,6 +212,21 @@ namespace K9 {
 
 						textureCoordinates[vert * 2] = (float)vertex / (float)verticesPrecision;
 						textureCoordinates[vert * 2 + 1] = (float)slice / (float)slicesPrecision;
+
+						//tangents
+						if (((x == 0.0f) && (y == 1.0f) && (z == 0.0f)) ||
+							((x == 0.0f) && (y == -1.0f) && (z == 0.0f))) {
+							//if north or south pole
+							tangents[vert * 3] = 0.0f;
+							tangents[vert * 3 + 1] = 0.0f;
+							tangents[vert * 3 + 2] = -1.0f;
+						}
+						else {
+							auto tangent = glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(x, y, z));
+							tangents[vert * 3] = tangent.x;
+							tangents[vert * 3 + 1] = tangent.y;
+							tangents[vert * 3 + 2] = tangent.z;
+						}
 					}
 				}
 
@@ -236,6 +252,9 @@ namespace K9 {
 				modelTextureCoordinates.reserve(numVertices * 2);
 				//model.indices() = std::vector<int>(numIndices);
 
+				std::vector<float> modelVertexTangents;
+				modelVertexTangents.reserve(numVertices * 3);
+
 				for (auto it = indices.cbegin(); it != indices.cend(); ++it) {
 					modelVertexPositions.push_back(vertexPositions[3 * (*it)]);
 					modelVertexPositions.push_back(vertexPositions[3 * (*it) + 1]);
@@ -247,16 +266,22 @@ namespace K9 {
 
 					modelTextureCoordinates.push_back(textureCoordinates[2 * (*it)]);
 					modelTextureCoordinates.push_back(textureCoordinates[2 * (*it) + 1]);
+
+					modelVertexTangents.push_back(tangents[3 * (*it)]);
+					modelVertexTangents.push_back(tangents[3 * (*it) + 1]);
+					modelVertexTangents.push_back(tangents[3 * (*it) + 2]);
 				}
 
 				GLuint vertexPositionsIndex = createArrayBuffer(&(modelVertexPositions[0]), modelVertexPositions.size());
 				GLuint vertexNormalsIndex = createArrayBuffer(&(modelVertexNormals[0]), modelVertexNormals.size());
 				GLuint textureCoordinatesIndex = createArrayBuffer(&(modelTextureCoordinates[0]), modelTextureCoordinates.size());
+				GLuint vertexTangents = createArrayBuffer(&(modelVertexTangents[0]), modelVertexTangents.size());
 
 				auto model = std::make_shared<Model>();
 				model->setVertexPositions(vertexPositionsIndex);
 				model->setVertexNormals(vertexNormalsIndex);
 				model->setVertexTextureCoordinates(textureCoordinatesIndex);
+				model->setVertexTangents(vertexTangents);
 
 				model->usesIndices() = false;
 				model->numberOfElements() = modelVertexPositions.size();
@@ -286,6 +311,7 @@ namespace K9 {
 
 				std::vector<float> modelVertexPositions = std::vector<float>(numVertices * 3);
 				std::vector<float> modelVertexNormals = std::vector<float>(numVertices * 3);
+				std::vector<float> modelVertexTangents = std::vector<float>(numVertices * 3);
 				std::vector<float> modelTextureCoordinates = std::vector<float>(numVertices * 2);
 				std::vector<int> modelIndices = std::vector<int>(numIndices);
 
@@ -310,6 +336,10 @@ namespace K9 {
 					modelVertexNormals[i * 3 + 0] = tmp.x;
 					modelVertexNormals[i * 3 + 1] = tmp.y;
 					modelVertexNormals[i * 3 + 2] = tmp.z;
+
+					modelVertexTangents[i * 3 + 0] = tTangents[i].x;
+					modelVertexTangents[i * 3 + 1] = tTangents[i].y;
+					modelVertexTangents[i * 3 + 2] = tTangents[i].z;
 				}
 
 				for (int ring = 1; ring <= precIn; ++ring) {
@@ -340,6 +370,10 @@ namespace K9 {
 						modelVertexNormals[aux * 3 + 0] = tmp.x;
 						modelVertexNormals[aux * 3 + 1] = tmp.y;
 						modelVertexNormals[aux * 3 + 2] = tmp.z;
+
+						modelVertexTangents[aux * 3 + 0] = tTangents[aux].x;
+						modelVertexTangents[aux * 3 + 1] = tTangents[aux].y;
+						modelVertexTangents[aux * 3 + 2] = tTangents[aux].z;
 					}
 				}
 
@@ -359,12 +393,14 @@ namespace K9 {
 
 				GLuint vertexPositionsIndex = createArrayBuffer(&(modelVertexPositions[0]), modelVertexPositions.size());
 				GLuint vertexNormalsIndex = createArrayBuffer(&(modelVertexNormals[0]), modelVertexNormals.size());
+				GLuint vertexTangentsIndex = createArrayBuffer(&(modelVertexTangents[0]), modelVertexTangents.size());
 				GLuint textureCoordinatesIndex = createArrayBuffer(&(modelTextureCoordinates[0]), modelTextureCoordinates.size());
 				GLuint indicesIndex = createElementArrayBuffer(&(modelIndices[0]), modelIndices.size());
 
 				auto model = std::make_shared<Model>();
 				model->setVertexPositions(vertexPositionsIndex);
 				model->setVertexNormals(vertexNormalsIndex);
+				model->setVertexTangents(vertexTangentsIndex);
 				model->setVertexTextureCoordinates(textureCoordinatesIndex);
 				model->setIndices(indicesIndex);
 
