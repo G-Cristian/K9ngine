@@ -7,6 +7,7 @@
 #include <Component.h>
 #include <Material.h>
 #include <Model.h>
+#include <NormalMaterial.h>
 
 #include <GL/glew.h>
 #include <map>
@@ -52,6 +53,14 @@ namespace K9 {
 
 			std::shared_ptr<const K9::Graphics::ColorMaterial> getColorMaterial() const {
 				return getTMaterial<K9::Graphics::ColorMaterial>();
+			}
+
+			void setNormalMaterial(std::shared_ptr<K9::Graphics::NormalMaterial> normalMaterial) {
+				setMaterial(normalMaterial);
+			}
+
+			std::shared_ptr<const K9::Graphics::NormalMaterial> getNormalMaterial() const {
+				return getTMaterial<K9::Graphics::NormalMaterial>();
 			}
 
 			friend class GameObjectComponentsPool;
