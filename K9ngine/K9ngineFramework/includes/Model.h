@@ -66,6 +66,16 @@ namespace K9 {
 				return getAttribute("vertexTextureCoordinates");
 			}
 
+			void setVertexTangents(GLuint vertexTangents) {
+				SET_ATTRIBUTE(vertexTangents);
+			}
+
+			GLuint getVertexTangents() const {
+				K9_ASSERT(_numberOfElements > 0);
+
+				return getAttribute("vertexTangents");
+			}
+
 			void setIndices(GLuint indices) {
 				SET_ATTRIBUTE(indices);
 			}
