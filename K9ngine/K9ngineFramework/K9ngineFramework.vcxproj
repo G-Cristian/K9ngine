@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -146,11 +146,13 @@
   <ItemGroup>
     <ClInclude Include="includes\AmbientLight.h" />
     <ClInclude Include="includes\BaseApp.h" />
+    <ClInclude Include="includes\BumpMappingRenderer.h" />
     <ClInclude Include="includes\Camera.h" />
     <ClInclude Include="includes\ColorMaterial.h" />
     <ClInclude Include="includes\ColorMaterialFactory.h" />
     <ClInclude Include="includes\Component.h" />
     <ClInclude Include="includes\CubeMapRenderer.h" />
+    <ClInclude Include="includes\DemoChapter10.h" />
     <ClInclude Include="includes\DemoChapter7.h" />
     <ClInclude Include="includes\DemoChapter8.h" />
     <ClInclude Include="includes\DemoCubeMap1.h" />
@@ -160,11 +162,14 @@
     <ClInclude Include="includes\GameObject.h" />
     <ClInclude Include="includes\GameObjectComponentsPool.h" />
     <ClInclude Include="includes\K9Debug.h" />
+    <ClInclude Include="includes\LightMaterialRenderer.h" />
     <ClInclude Include="includes\LightMaterialShadowRenderer.h" />
     <ClInclude Include="includes\Material.h" />
     <ClInclude Include="includes\MaterialComponent.h" />
     <ClInclude Include="includes\Model.h" />
     <ClInclude Include="includes\ModelsPool.h" />
+    <ClInclude Include="includes\NormalMappingRenderer.h" />
+    <ClInclude Include="includes\NormalMaterial.h" />
     <ClInclude Include="includes\PositionalLight.h" />
     <ClInclude Include="includes\Renderer.h" />
     <ClInclude Include="includes\RenderersContainer.h" />
@@ -181,19 +186,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseApp.cpp" />
+    <ClCompile Include="BumpMappingRenderer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorMaterial.cpp" />
     <ClCompile Include="ColorMaterialFactory.cpp" />
     <ClCompile Include="CubeMapRenderer.cpp" />
+    <ClCompile Include="DemoChapter10.cpp" />
     <ClCompile Include="DemoChapter7.cpp" />
     <ClCompile Include="DemoChapter8.cpp" />
     <ClCompile Include="DemoCubeMap1.cpp" />
     <ClCompile Include="EnvironmentMappingTextureRenderer.cpp" />
     <ClCompile Include="GameObjectComponentsPool.cpp" />
+    <ClCompile Include="LightMaterialRenderer.cpp" />
     <ClCompile Include="LightMaterialShadowRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="ModelsPool.cpp" />
+    <ClCompile Include="NormalMappingRenderer.cpp" />
+    <ClCompile Include="NormalMaterial.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderersContainer.cpp" />
     <ClCompile Include="RenderingManager.cpp" />
