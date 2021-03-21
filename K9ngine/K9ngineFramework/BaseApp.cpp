@@ -2,6 +2,7 @@
 
 #include <GameObjectComponentsPool.h>
 #include <K9Debug.h>
+#include <Keyboard.h>
 #include <ModelsPool.h>
 #include <RenderingManager.h>
 #include <TexturesPool.h>
@@ -67,6 +68,9 @@ namespace K9 {
 			}
 
 			glfwSwapInterval(1);
+
+			glfwSetKeyCallback(_window, K9::Input::key_callback);
+
 			//glfwSetWindowSizeCallback(_window, windowResizeCallbackWrapper);
 			glfwSetFramebufferSizeCallback(_window, windowResizeCallbackWrapper);
 
