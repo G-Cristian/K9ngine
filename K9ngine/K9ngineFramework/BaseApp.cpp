@@ -75,8 +75,12 @@ namespace K9 {
 
 		void BaseApp::windowResizeCallback(GLFWwindow* window, int newWidth, int newHeight) {
 			//float aspect = (float)(newWidth) / (float)(newHeight);
-			glViewport(0, 0, newWidth, newHeight);
-			resetingProjection((float)newWidth, (float)newHeight);
+			// if minimizing, don't reset the projection ...
+			if (!glfwGetWindowAttrib(window, GLFW_ICONIFIED)) {
+				// ... if not minimizing reset projection.
+				glViewport(0, 0, newWidth, newHeight);
+				resetingProjection((float)newWidth, (float)newHeight);
+			}
 		}
 
 		void BaseApp::resetingProjection(float newWidth, float newHeight) {
