@@ -162,6 +162,7 @@
     <ClInclude Include="includes\GameObject.h" />
     <ClInclude Include="includes\GameObjectComponentsPool.h" />
     <ClInclude Include="includes\K9Debug.h" />
+    <ClInclude Include="includes\Keyboard.h" />
     <ClInclude Include="includes\LightMaterialRenderer.h" />
     <ClInclude Include="includes\LightMaterialShadowRenderer.h" />
     <ClInclude Include="includes\Material.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="DemoCubeMap1.cpp" />
     <ClCompile Include="EnvironmentMappingTextureRenderer.cpp" />
     <ClCompile Include="GameObjectComponentsPool.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="LightMaterialRenderer.cpp" />
     <ClCompile Include="LightMaterialShadowRenderer.cpp" />
     <ClCompile Include="main.cpp" />
