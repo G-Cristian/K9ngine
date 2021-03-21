@@ -6,6 +6,7 @@
 #include <FloatMaterialComponent.h>
 #include <GameObject.h>
 #include <GameObjectComponentsPool.h>
+#include <Keyboard.h>
 #include <LightMaterialRenderer.h>
 #include <Model.h>
 #include <ModelsPool.h>
@@ -39,6 +40,26 @@ namespace K9 {
 
 		void DemoChapter10::update(double dt) {
 			float rot = dt * 45.0f * 3.14f / 180.0f;
+
+			auto weakCamera = _world->getActiveCamera();
+			auto camera = weakCamera.lock();
+			if (camera) {
+				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::D)) {
+					camera->moveRelative(glm::vec3(0.5f, 0.0f, 0.0f));
+				}
+
+				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::A)) {
+					camera->moveRelative(glm::vec3(-0.5f, 0.0f, 0.0f));
+				}
+
+				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::W)) {
+					camera->moveRelative(glm::vec3(0.0f, 0.0f, -0.5f));
+				}
+
+				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::S)) {
+					camera->moveRelative(glm::vec3(0.0f, 0.0f, 0.5f));
+				}
+			}
 
 			auto Sphere1 = _world->getGameObject("Sphere1");
 			Sphere1->localRotation().y += rot;
