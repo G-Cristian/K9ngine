@@ -47,6 +47,8 @@ namespace K9 {
 			K9::Components::GameObjectComponentsPool::instance().dispose();
 			K9::Graphics::RenderingManager::instance().dispose();
 
+			_world = nullptr;
+
 			_pointerToThisForUseInWindowResizeCallback = nullptr;
 		}
 

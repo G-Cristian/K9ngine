@@ -9,6 +9,7 @@
 #include <PositionalLight.h>
 #include <Spotlight.h>
 
+#include <list>
 #include <map>
 #include <memory>
 #include <vector>
@@ -20,7 +21,7 @@ namespace K9 {
 		World(const World&) = delete;
 		World(World&& other)noexcept = delete;
 
-		~World() = default;
+		~World();
 
 		World& operator=(const World&) = delete;
 		World& operator=(World&&) noexcept = delete;
@@ -96,7 +97,14 @@ namespace K9 {
 
 		std::weak_ptr<const Camera> getActiveCamera()const;
 		std::weak_ptr<Camera> getActiveCamera();
+
+		void destroyGameObject(const std::string& gameObjectName);
+		void destroyGarbage();
+
 	private:
+		std::map<std::string, std::shared_ptr<GameObject>>::iterator removeGameObject(const std::string& gameObjectName);
+		std::map<std::string, std::shared_ptr<GameObject>>::iterator removeGameObject(std::map<std::string, std::shared_ptr<GameObject>>::iterator gameObjectIt);
+
 		//TODO: Probably should use Partitioning Trees for one or more of these
 		std::map<std::string, std::shared_ptr<GameObject>> _gameObjects;
 		std::vector<std::shared_ptr<K9::Lighting::AmbientLight>> _ambientLights;
@@ -105,6 +113,8 @@ namespace K9 {
 		std::vector< std::shared_ptr<K9::Lighting::Spotlight>> _spotlights;
 		std::map<std::string, std::shared_ptr<Camera>> _cameras;
 		std::weak_ptr<Camera> _activeCamera;
+
+		std::list<std::string> _gameObjectsToBeDestroyed;
 	};
 }
 
