@@ -39,8 +39,11 @@ namespace K9 {
 
 			void removeRenderingComponentByGameObjectName(const std::string& gameObjectName) {
 				auto it = _gameObjectNamesRenderingComponents.find(gameObjectName);
-				K9_ASSERT(it != _gameObjectNamesRenderingComponents.end());
-				_gameObjectNamesRenderingComponents.erase(it);
+				//K9_ASSERT(it != _gameObjectNamesRenderingComponents.end());
+				if (it != _gameObjectNamesRenderingComponents.end()) {
+					it->second = nullptr;
+					_gameObjectNamesRenderingComponents.erase(it);
+				}
 			}
 
 			std::shared_ptr<const RenderingComponent> getRenderingComponentByGameObjectName(const std::string& gameObjectName)const {
