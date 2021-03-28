@@ -20,7 +20,7 @@ namespace K9 {
 			BaseApp::_pointerToThisForUseInWindowResizeCallback->windowResizeCallback(window, newWidth, newHeight);
 		}
 
-		BaseApp::BaseApp(const std::string& name, int width, int height) :
+		BaseApp::BaseApp(const std::string& name, int width, int height, int framesPerSecond /* = 60 */) :
 			_name(name),
 			_width(width),
 			_height(height),
@@ -29,7 +29,8 @@ namespace K9 {
 			_shouldTerminate(false),
 			_world(new World()),
 			_currentFrameTime(0.0),
-			_lastFrameTime(0.0) {
+			_lastFrameTime(0.0),
+			_secondsPerUpdate(1.0 / (double)framesPerSecond){
 			
 			K9_ASSERT(_pointerToThisForUseInWindowResizeCallback == nullptr);
 			if (_pointerToThisForUseInWindowResizeCallback == nullptr) {
@@ -98,13 +99,18 @@ namespace K9 {
 			_shouldTerminate = false;
 			init();
 			_lastFrameTime = glfwGetTime();
+			double lag = 0.0;
 			double dt = 0.0;
 			while (!glfwWindowShouldClose(_window) && !_shouldTerminate) {
 				_currentFrameTime = glfwGetTime();
 				dt = _currentFrameTime - _lastFrameTime;
 				_lastFrameTime = _currentFrameTime;
-				update(dt);
-				draw(dt);
+				lag += dt;
+				while (lag >= _secondsPerUpdate) {
+					update(_secondsPerUpdate);
+					lag -= _secondsPerUpdate;
+				}
+				draw(lag / _secondsPerUpdate);
 				glfwSwapBuffers(_window);
 				glfwPollEvents();
 			}

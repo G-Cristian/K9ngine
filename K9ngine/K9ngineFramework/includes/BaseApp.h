@@ -15,7 +15,7 @@ namespace K9 {
 
 		class BaseApp {
 		public:
-			BaseApp(const std::string& name, int width, int height);
+			BaseApp(const std::string& name, int width, int height, int framesPerSecond = 60);
 
 			BaseApp(const BaseApp&) = delete;
 			BaseApp(BaseApp&&) noexcept = delete;
@@ -49,6 +49,7 @@ namespace K9 {
 		private:
 			double _currentFrameTime;
 			double _lastFrameTime;
+			double _secondsPerUpdate;
 		};
 	}
 }
