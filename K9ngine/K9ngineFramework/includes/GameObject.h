@@ -109,13 +109,26 @@ namespace K9 {
 		glm::vec3& scale() {
 			return _scale;
 		}
+
+		bool isAlive()const {
+			return _isAlive;
+		}
+
 	private:
+		friend class World;
+
+		void kill() {
+			_isAlive = false;
+		}
+
 		std::string _name;
 		glm::vec3 _position;
 		glm::vec3 _localRotation;
 		glm::vec3 _offset;
 		glm::vec3 _rotation;
 		glm::vec3 _scale;
+
+		bool _isAlive;
 	};
 }
 

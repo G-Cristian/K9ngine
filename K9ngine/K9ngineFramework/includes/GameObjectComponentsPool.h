@@ -7,6 +7,7 @@
 #include <Renderer.h>
 #include <RenderingComponent.h>
 
+#include <list>
 #include <map>
 #include <memory>
 #include <string>
@@ -27,38 +28,31 @@ namespace K9 {
 
 			void dispose();
 
-			//TODO: delete copy/move constructor/assignment
+			// Delete copy/move constructor/assignment
+			GameObjectComponentsPool(const GameObjectComponentsPool&) = delete;
+			GameObjectComponentsPool(GameObjectComponentsPool&&) noexcept = delete;
+			GameObjectComponentsPool& operator=(GameObjectComponentsPool&&) noexcept = delete;
 
-			void addRenderingComponentByGameObjectName(const std::string& gameObjectName, std::shared_ptr<RenderingComponent> renderingComponent) {
-				auto it = _gameObjectNamesRenderingComponents.find(gameObjectName);
-				K9_ASSERT(it == _gameObjectNamesRenderingComponents.end());
-				if (it == _gameObjectNamesRenderingComponents.end()) {
-					_gameObjectNamesRenderingComponents.insert(it, std::make_pair(gameObjectName, renderingComponent));
-				}
-			}
-
-			void removeRenderingComponentByGameObjectName(const std::string& gameObjectName) {
-				auto it = _gameObjectNamesRenderingComponents.find(gameObjectName);
-				//K9_ASSERT(it != _gameObjectNamesRenderingComponents.end());
-				if (it != _gameObjectNamesRenderingComponents.end()) {
-					it->second = nullptr;
-					_gameObjectNamesRenderingComponents.erase(it);
-				}
-			}
-
-			std::shared_ptr<const RenderingComponent> getRenderingComponentByGameObjectName(const std::string& gameObjectName)const {
-				auto it = _gameObjectNamesRenderingComponents.find(gameObjectName);
-				return (it == _gameObjectNamesRenderingComponents.end() ? nullptr : it->second);
-			}
+			void addRenderingComponentByGameObjectName(const std::string& gameObjectName, std::shared_ptr<RenderingComponent> renderingComponent);
+			void addPendingRenderingComponents();
+			void removeRenderingComponentByGameObjectName(const std::string& gameObjectName);
+			std::shared_ptr<const RenderingComponent> getRenderingComponentByGameObjectName(const std::string& gameObjectName)const;
+			std::shared_ptr<RenderingComponent> getRenderingComponentByGameObjectName(const std::string& gameObjectName);
 
 			void attachRendererAndRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent);
+			void attachPendingRenderersAndRenderingComponents();
 			void detachRendererAndRenderingComponent(std::shared_ptr<RenderingComponent> renderingComponent);
 		private:
 			GameObjectComponentsPool() = default;
 
+			void addPendingRenderingComponentByGameObjectName(const std::string& gameObjectName, std::shared_ptr<RenderingComponent> renderingComponent);
+			void attachPendingRendererAndRenderingComponent(std::shared_ptr<const K9::Graphics::IRenderer> renderer, std::shared_ptr<RenderingComponent> renderingComponent);
+
 			static std::unique_ptr<GameObjectComponentsPool> _instance;
 			//Components
 			std::map<std::string, std::shared_ptr<RenderingComponent>> _gameObjectNamesRenderingComponents;
+			std::list<std::pair<const std::string, std::shared_ptr<RenderingComponent>>> _gameObjectsNamesRenderingComponentsToBeAdded;
+			std::list<std::pair<std::shared_ptr<const K9::Graphics::IRenderer>, std::shared_ptr<RenderingComponent>>> _renderersAndRenderingComponentsToBeAttached;
 		};
 	}
 }

@@ -28,12 +28,20 @@ namespace K9 {
 
 		void addGameObject(const std::shared_ptr<GameObject>& gameObject) {
 			//TODO: Should assert that the gameObject is not in the container already
-			_gameObjects.insert(std::make_pair(gameObject->name(), gameObject));
+			_gameObjectsToBeAdded.push_back(gameObject);
+		}
+
+		void addGameObjects() {
+			for (auto it = _gameObjectsToBeAdded.begin(); it != _gameObjectsToBeAdded.end();) {
+				auto& gameObject = *it;
+				_gameObjects.emplace(gameObject->name(), gameObject);
+				it = _gameObjectsToBeAdded.erase(it);
+			}
 		}
 
 		std::shared_ptr<GameObject> getGameObject(const std::string& name)const {
 			auto it = _gameObjects.find(name);
-			K9_ASSERT(it != _gameObjects.end());
+			//K9_ASSERT(it != _gameObjects.end());
 			if (it != _gameObjects.end()) {
 				return it->second;
 			}
@@ -98,10 +106,11 @@ namespace K9 {
 		std::weak_ptr<const Camera> getActiveCamera()const;
 		std::weak_ptr<Camera> getActiveCamera();
 
-		void destroyGameObject(const std::string& gameObjectName);
+		void destroyGameObject(std::shared_ptr<GameObject>);
 		void destroyGarbage();
 
 	private:
+		void destroyGameObject(const std::string& gameObjectName);
 		std::map<std::string, std::shared_ptr<GameObject>>::iterator removeGameObject(const std::string& gameObjectName);
 		std::map<std::string, std::shared_ptr<GameObject>>::iterator removeGameObject(std::map<std::string, std::shared_ptr<GameObject>>::iterator gameObjectIt);
 
@@ -114,6 +123,7 @@ namespace K9 {
 		std::map<std::string, std::shared_ptr<Camera>> _cameras;
 		std::weak_ptr<Camera> _activeCamera;
 
+		std::list<std::shared_ptr<GameObject>> _gameObjectsToBeAdded;
 		std::list<std::string> _gameObjectsToBeDestroyed;
 	};
 }

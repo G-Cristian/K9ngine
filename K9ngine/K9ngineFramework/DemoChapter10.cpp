@@ -59,10 +59,18 @@ namespace K9 {
 				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::S)) {
 					camera->moveRelative(glm::vec3(0.0f, 0.0f, 0.5f));
 				}
+
+				if (K9::Input::Keyboard::isPressed(K9::Input::Keys::KEY_1)) {
+					auto sphere1 = _world->getGameObject("Sphere1");
+					if(sphere1 && sphere1->isAlive())
+						_world->destroyGameObject(_world->getGameObject("Sphere1"));
+				}
 			}
 
 			auto Sphere1 = _world->getGameObject("Sphere1");
-			Sphere1->localRotation().y += rot;
+			if (Sphere1 != nullptr) {
+				Sphere1->localRotation().y += rot;
+			}
 
 			auto Sphere2 = _world->getGameObject("Sphere2");
 			Sphere2->localRotation().y += rot;

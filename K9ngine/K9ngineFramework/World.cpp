@@ -56,8 +56,12 @@ namespace K9 {
 		}
 	}
 
-	void World::destroyGameObject(const std::string& gameObjectName) {
-		_gameObjectsToBeDestroyed.push_back(gameObjectName);
+	void World::destroyGameObject(std::shared_ptr<GameObject> gameObject) {
+		K9_ASSERT(gameObject != nullptr);
+		if (gameObject != nullptr) {
+			gameObject->kill();
+			destroyGameObject(gameObject->name());
+		}
 	}
 
 	void World::destroyGarbage() {
@@ -66,6 +70,10 @@ namespace K9 {
 		}
 
 		_gameObjectsToBeDestroyed.clear();
+	}
+
+	void World::destroyGameObject(const std::string& gameObjectName) {
+		_gameObjectsToBeDestroyed.push_back(gameObjectName);
 	}
 
 	std::map<std::string, std::shared_ptr<GameObject>>::iterator World::removeGameObject(const std::string& gameObjectName) {
@@ -81,7 +89,9 @@ namespace K9 {
 		K9_ASSERT(gameObjectIt != _gameObjects.end());
 		if (gameObjectIt != _gameObjects.end()) {
 			// remove from game components
-			K9::Components::GameObjectComponentsPool::instance().removeRenderingComponentByGameObjectName(gameObjectIt->first);
+			auto& gameObjectComponentsPoolInstance = K9::Components::GameObjectComponentsPool::instance();
+			gameObjectComponentsPoolInstance.detachRendererAndRenderingComponent(gameObjectComponentsPoolInstance.getRenderingComponentByGameObjectName(gameObjectIt->first));
+			gameObjectComponentsPoolInstance.removeRenderingComponentByGameObjectName(gameObjectIt->first);
 
 			// make sure that this game object pointer is the last one (i.e. unique)
 			K9_ASSERT(gameObjectIt->second.unique());

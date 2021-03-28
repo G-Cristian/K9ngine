@@ -106,11 +106,20 @@ namespace K9 {
 				dt = _currentFrameTime - _lastFrameTime;
 				_lastFrameTime = _currentFrameTime;
 				lag += dt;
+				
+				// add pending game objects and components
+				_world->addGameObjects();
+				K9::Components::GameObjectComponentsPool::instance().addPendingRenderingComponents();
+				K9::Components::GameObjectComponentsPool::instance().attachPendingRenderersAndRenderingComponents();
+
 				while (lag >= _secondsPerUpdate) {
 					update(_secondsPerUpdate);
 					lag -= _secondsPerUpdate;
 				}
 				draw(lag / _secondsPerUpdate);
+
+				_world->destroyGarbage();
+
 				glfwSwapBuffers(_window);
 				glfwPollEvents();
 			}
